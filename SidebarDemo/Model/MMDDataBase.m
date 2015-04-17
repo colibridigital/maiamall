@@ -92,19 +92,6 @@ static MMDDataBase *dataBase;
     [self closeDataBase];
 }
 
-- (void)loadProductImage:(int)itemId itemImage_p:(UIImage **)itemImage_p {
-    
-    NSString *queryForItemImage = [NSString stringWithFormat:@"SELECT url FROM ProductImage WHERE product_id=%i", itemId];
-    sqlite3_stmt *statementForItemImage;
-    if (sqlite3_prepare_v2(dataBase, [queryForItemImage UTF8String], -1, &statementForItemImage, nil)
-        == SQLITE_OK) {
-        while (sqlite3_step(statementForItemImage) == SQLITE_ROW) {
-            char * itemImageURL = (char *)sqlite3_column_text(statementForItemImage, 0);
-            *itemImage_p = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithUTF8String:itemImageURL]]]];
-        }
-    }
-}
-
 - (MMDStore *)getStoreDetails:(int)itemStoreId {
     MMDStore *itemStore;
     NSString *queryForStoreName = [NSString stringWithFormat:@"SELECT longName, logourl FROM Store WHERE id=%i", itemStoreId];
@@ -196,9 +183,6 @@ static MMDDataBase *dataBase;
 }
 
 - (MMDBrand *)loadBrandDetails:(int)itemBrandId {
-    //                usleep(1000000);
-    //            }
-    
     MMDBrand *itemBrand;
     NSString *queryForBrandName = [NSString stringWithFormat:@"SELECT name FROM Brand WHERE id=%i", itemBrandId];
     sqlite3_stmt *statementForBrandName;
@@ -230,6 +214,71 @@ static MMDDataBase *dataBase;
     return itemCategory;
 }
 
+-(NSString *) randomStringWithLength: (int) len {
+    
+    NSMutableString *randomString = [NSMutableString stringWithCapacity: len];
+    NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    
+    for (int i=0; i<len; i++) {
+        [randomString appendFormat: @"%C", [letters characterAtIndex: arc4random_uniform([letters length])]];
+    }
+    
+    return randomString;
+}
+
+- (NSString *)manipulateImage:(int)itemId {
+    UIImage *itemImage;
+    
+    itemImage = [self loadProductImage:itemId];
+    
+    NSString *imagePath = [self saveImageGetPath:itemImage];
+    
+    [self updateDatabaseWithImagepath:itemId :imagePath];
+    
+    return imagePath;
+}
+
+- (void) updateDatabaseWithImagepath:(int)itemId : (NSString *) imagePath {
+    char *filePath=[imagePath UTF8String];
+    sqlite3_stmt *updateStmt;
+    const char *sql = "update ProductImage Set url = ? Where ID = ?";
+    
+    if(sqlite3_prepare_v2(dataBase, sql, -1, &updateStmt, NULL) != SQLITE_OK)
+            NSLog(@"Error while creating update statement. %s", sqlite3_errmsg(dataBase));
+    
+    sqlite3_bind_text(updateStmt, 1, filePath, -1, SQLITE_STATIC);
+    
+    char* errmsg;
+    sqlite3_exec(dataBase, "COMMIT", NULL, NULL, &errmsg);
+    
+    if(SQLITE_DONE != sqlite3_step(updateStmt))
+        NSLog(@"Error while updating. %s", sqlite3_errmsg(dataBase));
+    sqlite3_finalize(updateStmt);
+}
+
+- (UIImage *)loadProductImage:(int)itemId {
+    UIImage *itemImage;
+    NSString *queryForItemImage = [NSString stringWithFormat:@"SELECT url FROM ProductImage WHERE product_id=%i", itemId];
+    sqlite3_stmt *statementForItemImage;
+    if (sqlite3_prepare_v2(dataBase, [queryForItemImage UTF8String], -1, &statementForItemImage, nil)
+        == SQLITE_OK) {
+        while (sqlite3_step(statementForItemImage) == SQLITE_ROW) {
+            char * itemImageURL = (char *)sqlite3_column_text(statementForItemImage, 0);
+            
+            NSString *urlString = [NSString stringWithUTF8String: itemImageURL];
+           
+            if ([urlString rangeOfString:@"http"].location == NSNotFound) {
+                    itemImage = [UIImage imageWithContentsOfFile:urlString];
+            } else {
+                itemImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithUTF8String:itemImageURL]]]];
+            }
+            
+        }
+    }
+    
+    return itemImage;
+}
+
 - (NSString *)saveImageGetPath:(UIImage *)finalImage {
     NSData *imageData = UIImagePNGRepresentation(finalImage);
     
@@ -245,90 +294,8 @@ static MMDDataBase *dataBase;
     }
     else
     {
-        NSLog((@"the cachedImagedPath is %@",imagePath));
+        NSLog((@"the cached image path is %@",imagePath));
     }
-    return imagePath;
-}
-
--(NSString *) randomStringWithLength: (int) len {
-    
-    NSMutableString *randomString = [NSMutableString stringWithCapacity: len];
-    NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    
-    for (int i=0; i<len; i++) {
-        [randomString appendFormat: @"%C", [letters characterAtIndex: arc4random_uniform([letters length])]];
-    }
-    
-    return randomString;
-}
-
-- (NSString *)manipulateImage:(int)itemId {
-    UIImage *itemImage;
-    UIImage *finalImage;
-    UIImage *targetImage;
-    
-    [self loadProductImage:itemId itemImage_p:&itemImage];
-    
-    CGSize targetSize = CGSizeMake(230, 250);
-    CGSize imageSize = itemImage.size;
-    CGFloat width = itemImage.size.width;
-    CGFloat height = itemImage.size.height;
-    
-    CGFloat targetWidth = targetSize.width;
-    CGFloat targetHeight = targetSize.height;
-    
-    CGFloat scaleFactor = 0.0;
-    CGFloat scaledWidth = targetWidth;
-    CGFloat scaledHeight = targetHeight;
-    
-    CGPoint thumbnailPoint = CGPointMake(0.0,0.0);
-    
-        CGFloat widthFactor = targetWidth / width;
-        CGFloat heightFactor = targetHeight / height;
-        
-        if (widthFactor < heightFactor)
-            scaleFactor = widthFactor;
-        else
-            scaleFactor = heightFactor;
-        
-        scaledWidth  = width * scaleFactor;
-        scaledHeight = height * scaleFactor;
-        
-        // center the image
-        
-        if (widthFactor < heightFactor) {
-            thumbnailPoint.y = (targetHeight - scaledHeight) * 0.5;
-        } else if (widthFactor > heightFactor) {
-            thumbnailPoint.x = (targetWidth - scaledWidth) * 0.5;
-        }
-    
-    
-    // this is actually the interesting part:
-    
-    UIGraphicsBeginImageContext(targetSize);
-    
-    CGRect thumbnailRect = CGRectZero;
-    thumbnailRect.origin = thumbnailPoint;
-    thumbnailRect.size.width  = scaledWidth;
-    thumbnailRect.size.height = scaledHeight;
-    
-    [itemImage drawInRect:thumbnailRect];
-    
-    targetImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    if(targetImage == nil) NSLog(@"could not scale image");
-    
-    NSData *dataForJPEGFile = UIImageJPEGRepresentation(targetImage, 0.7);
-    
-    itemImage = nil;
-    targetImage = nil;
-    
-    finalImage = [UIImage imageWithData:dataForJPEGFile];
-    
-    
-    NSString *imagePath = [self saveImageGetPath:finalImage];
-    
     return imagePath;
 }
 
