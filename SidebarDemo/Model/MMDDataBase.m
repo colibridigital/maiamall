@@ -20,12 +20,12 @@ static MMDDataBase *dataBase;
     static dispatch_once_t onceToken;
     static MMDDataBase *shared_instance = nil;
     dispatch_once(&onceToken, ^{
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:kDataBaseWasInitiated]) {
-            shared_instance = [MMDDataBase getDataBase];
-        } else {
+//        if ([[NSUserDefaults standardUserDefaults] boolForKey:kDataBaseWasInitiated]) {
+//            shared_instance = [MMDDataBase getDataBase];
+//        } else {
             shared_instance = [[MMDDataBase alloc] init];
             [shared_instance initDatabase];
-        }
+    //    }
     });
     return shared_instance;
 }
@@ -228,14 +228,19 @@ static MMDDataBase *dataBase;
 
 - (NSString *)manipulateImage:(int)itemId {
     UIImage *itemImage;
+    NSString *imagePath;
     
-    itemImage = [self loadProductImage:itemId];
+    imagePath = [self loadProductImagePath:itemId];
+    char *charPath=[imagePath UTF8String];
     
-    NSString *imagePath = [self saveImageGetPath:itemImage];
-    
-    [self updateDatabaseWithImagepath:itemId :imagePath];
-    
-    return imagePath;
+    if ([imagePath rangeOfString:@"http"].location == NSNotFound) {
+        return imagePath;
+    } else {
+        itemImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithUTF8String:charPath]]]];
+        NSString *imagePath = [self saveImageGetPath:itemImage];
+        [self updateDatabaseWithImagepath:itemId :(imagePath)];
+        return imagePath;
+    }
 }
 
 - (void) updateDatabaseWithImagepath:(int)itemId : (NSString *) imagePath {
@@ -256,8 +261,9 @@ static MMDDataBase *dataBase;
     sqlite3_finalize(updateStmt);
 }
 
-- (UIImage *)loadProductImage:(int)itemId {
+- (NSString *)loadProductImagePath:(int)itemId {
     UIImage *itemImage;
+    NSString *urlString;
     NSString *queryForItemImage = [NSString stringWithFormat:@"SELECT url FROM ProductImage WHERE product_id=%i", itemId];
     sqlite3_stmt *statementForItemImage;
     if (sqlite3_prepare_v2(dataBase, [queryForItemImage UTF8String], -1, &statementForItemImage, nil)
@@ -265,18 +271,11 @@ static MMDDataBase *dataBase;
         while (sqlite3_step(statementForItemImage) == SQLITE_ROW) {
             char * itemImageURL = (char *)sqlite3_column_text(statementForItemImage, 0);
             
-            NSString *urlString = [NSString stringWithUTF8String: itemImageURL];
-           
-            if ([urlString rangeOfString:@"http"].location == NSNotFound) {
-                    itemImage = [UIImage imageWithContentsOfFile:urlString];
-            } else {
-                itemImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithUTF8String:itemImageURL]]]];
-            }
-            
+            urlString = [NSString stringWithUTF8String: itemImageURL];
         }
     }
     
-    return itemImage;
+    return urlString;
 }
 
 - (NSString *)saveImageGetPath:(UIImage *)finalImage {
