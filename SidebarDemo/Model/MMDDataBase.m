@@ -11,6 +11,7 @@
 #import "MMDStore.h"
 #import "MMDOffer.h"
 #import "MMDBrand.h"
+#import "FMDB.h"
 
 @implementation MMDDataBase
 
@@ -125,6 +126,7 @@ static MMDDataBase *dataBase;
         
     }
     sqlite3_finalize(statementForStoreName);
+    sqlite3_close(dataBase);
     return itemStore;
 }
 
@@ -153,6 +155,7 @@ static MMDDataBase *dataBase;
         }
     }
     sqlite3_finalize(statementForColorName);
+    sqlite3_close(dataBase);
 }
 
 - (void)loadSizeDetails:(int)itemId itemSizes:(NSMutableArray *)itemSizes {
@@ -180,6 +183,7 @@ static MMDDataBase *dataBase;
         }
     }
     sqlite3_finalize(statementForSizeName);
+    sqlite3_close(dataBase);
 }
 
 - (MMDBrand *)loadBrandDetails:(int)itemBrandId {
@@ -196,6 +200,7 @@ static MMDDataBase *dataBase;
         }
     }
     sqlite3_finalize(statementForBrandName);
+    sqlite3_close(dataBase);
     return itemBrand;
 }
 
@@ -211,6 +216,7 @@ static MMDDataBase *dataBase;
         }
     }
     sqlite3_finalize(statementForCategoryName);
+    sqlite3_close(dataBase);
     return itemCategory;
 }
 
@@ -244,21 +250,30 @@ static MMDDataBase *dataBase;
 }
 
 - (void) updateDatabaseWithImagepath:(int)itemId : (NSString *) imagePath {
-    char *filePath=[imagePath UTF8String];
-    sqlite3_stmt *updateStmt;
-    const char *sql = "update ProductImage Set url = ? Where ID = ?";
-    
-    if(sqlite3_prepare_v2(dataBase, sql, -1, &updateStmt, NULL) != SQLITE_OK)
+        char *filePath=[imagePath UTF8String];
+        sqlite3_stmt *updateStmt;
+        
+        const char *sql = "update ProductImage set url = 'hello world' where id = 159";
+        
+        if(sqlite3_prepare_v2(dataBase, sql, -1, &updateStmt, NULL) != SQLITE_OK)
             NSLog(@"Error while creating update statement. %s", sqlite3_errmsg(dataBase));
+        
+        //sqlite3_bind_text(updateStmt, 1, filePath, -1, SQLITE_STATIC);
+        //sqlite3_bind_int(updateStmt, 2, itemId);
     
-    sqlite3_bind_text(updateStmt, 1, filePath, -1, SQLITE_STATIC);
+        char errmsg;
+        sqlite3_exec(dataBase, "COMMIT", NULL, NULL, &errmsg);
+        
+        if(SQLITE_DONE != sqlite3_step(updateStmt)) {
+            NSLog(@"Error while updating. %s", sqlite3_errmsg(dataBase));
+        } else {
+            sqlite3_reset(updateStmt);
+        }
     
-    char* errmsg;
-    sqlite3_exec(dataBase, "COMMIT", NULL, NULL, &errmsg);
-    
-    if(SQLITE_DONE != sqlite3_step(updateStmt))
-        NSLog(@"Error while updating. %s", sqlite3_errmsg(dataBase));
-    sqlite3_finalize(updateStmt);
+        sqlite3_finalize(updateStmt);
+        //[self saveDataBase];
+        sqlite3_close(dataBase);
+        NSLog(@"Updated image URL for item id %i", itemId);
 }
 
 - (NSString *)loadProductImagePath:(int)itemId {
@@ -275,6 +290,8 @@ static MMDDataBase *dataBase;
         }
     }
     
+    sqlite3_finalize(statementForItemImage);
+    sqlite3_close(dataBase);
     return urlString;
 }
 
@@ -359,6 +376,7 @@ static MMDDataBase *dataBase;
             }
         }
         sqlite3_finalize(statementForItems);
+        sqlite3_close(dataBase);
     }
     
     return retval;

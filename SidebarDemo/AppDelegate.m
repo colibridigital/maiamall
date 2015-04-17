@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "FMDatabase.h"
 #import "WYPopoverController.h"
+#import <sqlite3.h>
 
 @implementation AppDelegate
 
@@ -32,6 +33,8 @@
     [popoverAppearance setArrowHeight:40];
     [popoverAppearance setArrowBase:60];
     [GMSServices provideAPIKey:@"AIzaSyBINMA94AsHPPbLsrrYm2s-BBOhkdihD6c"];
+    
+    [self copyDatabaseIfNeeded];
     
     return YES;
 }
@@ -65,6 +68,43 @@
     [[MMDDataBase database] saveDataBase];
     [[MMDDataBase database] closeDataBase];
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (void) copyDatabaseIfNeeded {
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    NSError *error;
+    
+    NSString *dbPath = [self getDBPath];
+    
+    BOOL success = [fileManager fileExistsAtPath:dbPath];
+    
+    if(!success)
+        
+    {
+        
+        NSString *defaultDBPath = [[[NSBundle mainBundle] resourcePath]
+                                   
+                                   stringByAppendingPathComponent:@"maiamall.s3db"];
+        
+        success = [fileManager copyItemAtPath:defaultDBPath toPath:dbPath error:&error];
+        
+        if (!success)
+            
+            NSAssert1(0, @"Failed to create database file with message '%@'.", [error localizedDescription]);
+        
+    }
+}
+
+- (NSString *) getDBPath {
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory , NSUserDomainMask, YES);
+    
+    NSString *documentsDir = [paths objectAtIndex:0];
+    
+    return [documentsDir stringByAppendingPathComponent:@"maiamall.s3db"];
+    
 }
 
 @end
