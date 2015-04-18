@@ -287,7 +287,7 @@
                                                           [self.navigationController pushViewController:itemPage animated:YES];
                                                       }];
 
-        [banner setSecondsToShow:3];
+        [banner setSecondsToShow:5];
         [banner show];
         
         

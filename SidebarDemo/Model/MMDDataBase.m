@@ -21,12 +21,14 @@ static MMDDataBase *dataBase;
     static dispatch_once_t onceToken;
     static MMDDataBase *shared_instance = nil;
     dispatch_once(&onceToken, ^{
-//        if ([[NSUserDefaults standardUserDefaults] boolForKey:kDataBaseWasInitiated]) {
-//            shared_instance = [MMDDataBase getDataBase];
-//        } else {
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:kDataBaseWasInitiated]) {
+           // shared_instance = [MMDDataBase getDataBase];
+            NSLog(@"in here");
+            [shared_instance initDatabase];
+        } else {
             shared_instance = [[MMDDataBase alloc] init];
             [shared_instance initDatabase];
-    //    }
+        }
     });
     return shared_instance;
 }
@@ -55,7 +57,11 @@ static MMDDataBase *dataBase;
 - (id)init {
     if ((self = [super init])) {
         NSString *sqLiteDb = [[NSBundle mainBundle] pathForResource:@"maiamall"
-                                                             ofType:@"s3db"];
+                                                            ofType:@"s3db"];
+        
+       // [self copyDatabaseIfNeeded];
+        
+        //NSString* sqLiteDb = [self getDBPath];
         
         if (sqlite3_open([sqLiteDb UTF8String], &dataBase) != SQLITE_OK) {
             NSLog(@"Failed to open database!");
@@ -63,6 +69,44 @@ static MMDDataBase *dataBase;
     }
     return self;
 }
+
+- (void) copyDatabaseIfNeeded {
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    NSError *error;
+    
+    NSString *dbPath = [self getDBPath];
+    
+    BOOL success = [fileManager fileExistsAtPath:dbPath];
+    
+    if(!success)
+        
+    {
+        
+        NSString *defaultDBPath = [[[NSBundle mainBundle] resourcePath]
+                                   
+                                   stringByAppendingPathComponent:@"maiamall.s3db"];
+        
+        success = [fileManager copyItemAtPath:defaultDBPath toPath:dbPath error:&error];
+        
+        if (!success)
+            
+            NSAssert1(0, @"Failed to create database file with message '%@'.", [error localizedDescription]);
+        
+    }
+}
+
+- (NSString *) getDBPath {
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory , NSUserDomainMask, YES);
+    
+    NSString *documentsDir = [paths objectAtIndex:0];
+    
+    return [documentsDir stringByAppendingPathComponent:@"maiamall.s3db"];
+    
+}
+
 
 + (MMDDataBase*)getDataBase {
     if ([[NSUserDefaults standardUserDefaults] objectForKey:kDataBase]) {
@@ -237,6 +281,9 @@ static MMDDataBase *dataBase;
     NSString *imagePath;
     
     imagePath = [self loadProductImagePath:itemId];
+    
+    NSLog(@"loading path: %@", imagePath);
+    
     char *charPath=[imagePath UTF8String];
     
     if ([imagePath rangeOfString:@"http"].location == NSNotFound) {
@@ -250,19 +297,40 @@ static MMDDataBase *dataBase;
 }
 
 - (void) updateDatabaseWithImagepath:(int)itemId : (NSString *) imagePath {
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsPath = [paths objectAtIndex:0];
+    NSString *databasePath = [documentsPath stringByAppendingPathComponent:@"maiamall.s3db"];
+        sqlite3 *newDatabase;
+    
         char *filePath=[imagePath UTF8String];
-        sqlite3_stmt *updateStmt;
+    
+        sqlite3_stmt *updateStmt = nil;
+    
+    NSLog(@"database path: %@", databasePath);
+    
+    FMDatabase *dB = [FMDatabase databaseWithPath:databasePath];
+    
+    [dB open];
+    
+        [dB beginTransaction];
+    
+        BOOL success = [dB executeUpdate:@"UPDATE ProductImage SET url= ? WHERE id = ?", [NSString stringWithFormat:@"%s", filePath], [NSNumber numberWithInt:itemId],nil];
+    
+  /*  if(sqlite3_open([databasePath UTF8String], &newDatabase) == SQLITE_OK)
+    {
         
-        const char *sql = "update ProductImage set url = 'hello world' where id = 159";
-        
-        if(sqlite3_prepare_v2(dataBase, sql, -1, &updateStmt, NULL) != SQLITE_OK)
-            NSLog(@"Error while creating update statement. %s", sqlite3_errmsg(dataBase));
-        
-        //sqlite3_bind_text(updateStmt, 1, filePath, -1, SQLITE_STATIC);
-        //sqlite3_bind_int(updateStmt, 2, itemId);
+        const char *sql = "update ProductImage set url = ? where id = ?";
+    
+        if(sqlite3_prepare_v2(newDatabase, sql, -1, &updateStmt, NULL) != SQLITE_OK)
+            NSLog(@"Error while creating update statement. %s", sqlite3_errmsg(newDatabase));
+    
+    
+        sqlite3_bind_text(updateStmt, 1, filePath, -1, SQLITE_STATIC);
+        sqlite3_bind_int(updateStmt, 2, itemId);
     
         char errmsg;
-        sqlite3_exec(dataBase, "COMMIT", NULL, NULL, &errmsg);
+       // sqlite3_exec(newDatabase, "COMMIT", NULL, NULL, &errmsg);
         
         if(SQLITE_DONE != sqlite3_step(updateStmt)) {
             NSLog(@"Error while updating. %s", sqlite3_errmsg(dataBase));
@@ -271,14 +339,25 @@ static MMDDataBase *dataBase;
         }
     
         sqlite3_finalize(updateStmt);
+    }
         //[self saveDataBase];
-        sqlite3_close(dataBase);
-        NSLog(@"Updated image URL for item id %i", itemId);
+        sqlite3_close(newDatabase);*/
+    
+        if(success) {
+            NSLog(@"Updated image URL for item id %i", itemId);
+        
+            [dB commit];
+            [dB close];
+        }
+    
 }
 
 - (NSString *)loadProductImagePath:(int)itemId {
     UIImage *itemImage;
     NSString *urlString;
+    
+    NSLog(@"in here");
+    
     NSString *queryForItemImage = [NSString stringWithFormat:@"SELECT url FROM ProductImage WHERE product_id=%i", itemId];
     sqlite3_stmt *statementForItemImage;
     if (sqlite3_prepare_v2(dataBase, [queryForItemImage UTF8String], -1, &statementForItemImage, nil)
@@ -317,10 +396,15 @@ static MMDDataBase *dataBase;
 
 - (NSMutableArray *)getItems {
     NSMutableArray * retval = [[NSMutableArray alloc] init];
-    NSString *queryForItems = @"SELECT * FROM Product";
+    NSString *queryForItems = @"SELECT * FROM Product where id > 159 and id <283";
     sqlite3_stmt *statementForItems;
+
+    
     if (sqlite3_prepare_v2(dataBase, [queryForItems UTF8String], -1, &statementForItems, nil)
         == SQLITE_OK) {
+        
+        NSLog(@"getting here");
+        
         while (sqlite3_step(statementForItems) == SQLITE_ROW) {
             
             NSString *itemTitle = @"";
@@ -377,6 +461,8 @@ static MMDDataBase *dataBase;
         }
         sqlite3_finalize(statementForItems);
         sqlite3_close(dataBase);
+    } else {
+        NSLog(@"not good");
     }
     
     return retval;
