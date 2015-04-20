@@ -16,20 +16,19 @@
 @implementation MMDDataBase
 
 static MMDDataBase *dataBase;
+AppDelegate* appDel;
 
 +(id)database {
+    appDel = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     static dispatch_once_t onceToken;
     static MMDDataBase *shared_instance = nil;
     dispatch_once(&onceToken, ^{
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:kDataBaseWasInitiated]) {
-           // shared_instance = [MMDDataBase getDataBase];
-            NSLog(@"in here");
-            [shared_instance initDatabase];
-        } else {
+        
             shared_instance = [[MMDDataBase alloc] init];
             [shared_instance initDatabase];
-        }
+        
     });
+
     return shared_instance;
 }
 
@@ -56,211 +55,137 @@ static MMDDataBase *dataBase;
 
 - (id)init {
     if ((self = [super init])) {
-        NSString *sqLiteDb = [[NSBundle mainBundle] pathForResource:@"maiamall"
-                                                            ofType:@"s3db"];
+        NSString *sqLiteDb = [appDel getDBPath];
         
-       // [self copyDatabaseIfNeeded];
-        
-        //NSString* sqLiteDb = [self getDBPath];
-        
-        if (sqlite3_open([sqLiteDb UTF8String], &dataBase) != SQLITE_OK) {
-            NSLog(@"Failed to open database!");
-        }
+        dataBase = [FMDatabase databaseWithPath:sqLiteDb];
     }
     return self;
 }
 
-- (void) copyDatabaseIfNeeded {
-    
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    
-    NSError *error;
-    
-    NSString *dbPath = [self getDBPath];
-    
-    BOOL success = [fileManager fileExistsAtPath:dbPath];
-    
-    if(!success)
-        
-    {
-        
-        NSString *defaultDBPath = [[[NSBundle mainBundle] resourcePath]
-                                   
-                                   stringByAppendingPathComponent:@"maiamall.s3db"];
-        
-        success = [fileManager copyItemAtPath:defaultDBPath toPath:dbPath error:&error];
-        
-        if (!success)
-            
-            NSAssert1(0, @"Failed to create database file with message '%@'.", [error localizedDescription]);
-        
-    }
-}
-
-- (NSString *) getDBPath {
-    
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory , NSUserDomainMask, YES);
-    
-    NSString *documentsDir = [paths objectAtIndex:0];
-    
-    return [documentsDir stringByAppendingPathComponent:@"maiamall.s3db"];
-    
-}
-
-
-+ (MMDDataBase*)getDataBase {
-    if ([[NSUserDefaults standardUserDefaults] objectForKey:kDataBase]) {
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSData *data = [defaults objectForKey:kDataBase];
-        return[NSKeyedUnarchiver unarchiveObjectWithData:data];
-    } else {
-        return [[MMDDataBase alloc] init];
-    }
-}
-
-- (void)saveDataBase {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self];
-    [defaults setObject:data forKey:kDataBase];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
 - (void)closeDataBase {
-    sqlite3_close(dataBase);
+    [dataBase close];
 }
 
 - (void)initDatabase {
+    
+    [dataBase open];
+    
     self.arrayWithItems = [[NSMutableArray alloc] initWithArray:[self getItems]];
     self.arrayWithOffers = [[NSMutableArray alloc] initWithArray:[self getOffers]];
-    [self saveDataBase];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kDataBaseWasInitiated];
     [self closeDataBase];
 }
 
 - (MMDStore *)getStoreDetails:(int)itemStoreId {
     MMDStore *itemStore;
-    NSString *queryForStoreName = [NSString stringWithFormat:@"SELECT longName, logourl FROM Store WHERE id=%i", itemStoreId];
-    sqlite3_stmt *statementForStoreName;
-    if (sqlite3_prepare_v2(dataBase, [queryForStoreName UTF8String], -1, &statementForStoreName, nil)
-        == SQLITE_OK) {
-        while (sqlite3_step(statementForStoreName) == SQLITE_ROW) {
-            char * storeTitleChar = (char *)sqlite3_column_text(statementForStoreName, 0);
-            char * storeLogoURL = (char *)sqlite3_column_text(statementForStoreName, 1);
-            
-            UIImage * storeLogo = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithUTF8String:storeLogoURL]]]];
-            
-            NSString * storeTitle = [[NSString alloc] initWithUTF8String:storeTitleChar];
-            
-            double latitude = 0;
-            double longitude = 0;
-            NSString *queryForStoreCoordinates = [NSString stringWithFormat:@"SELECT latitude, longitude FROM StoreCoordinate WHERE store_id=%i", itemStoreId];
-            sqlite3_stmt *statementForStoreCoordinates;
-            if (sqlite3_prepare_v2(dataBase, [queryForStoreCoordinates UTF8String], -1, &statementForStoreCoordinates, nil)
-                == SQLITE_OK) {
-                while (sqlite3_step(statementForStoreCoordinates) == SQLITE_ROW) {
-                    latitude = (double) sqlite3_column_double(statementForStoreCoordinates, 0);
-                    longitude = (double) sqlite3_column_double(statementForStoreCoordinates, 1);
-                }
-            }
+    
+   // if (![dataBase open])
+     //   [dataBase open];
+
+    
+    FMResultSet *rs = [dataBase executeQuery:@"SELECT longName, logourl FROM Store WHERE id=?", [NSNumber numberWithInt:itemStoreId], nil];
+    FMResultSet *rs2;
+    [self sanitiseResultSet:rs];
+    
+    while ([rs next]) {
+        
+        UIImage * storeLogo = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[rs stringForColumn:@"logoURL"]]]];
+        
+        NSString * storeTitle = [[NSString alloc] initWithString:[rs stringForColumn:@"longName"]];
+        
+        double latitude = 0;
+        double longitude = 0;
+        
+        rs2 = [dataBase executeQuery:@"SELECT latitude, longitude FROM StoreCoordinate WHERE store_id=?", [NSNumber numberWithInt:itemStoreId], nil];
+        
+        while ([rs2 next]) {
+            latitude = [rs2 doubleForColumn:@"latitude"];
+            longitude = [rs2 doubleForColumn:@"longitude"];
             
             if (latitude != 0 & longitude != 0) {
                 itemStore = [[MMDStore alloc] initWithId:[NSString stringWithFormat:@"%i", itemStoreId] title:storeTitle description:@"" logo:storeLogo latitude:latitude longitude:longitude];
             }
         }
         
+        [rs2 close];
     }
-    sqlite3_finalize(statementForStoreName);
-    sqlite3_close(dataBase);
+    
+    [rs close];
+    //[self closeDataBase];
+    
     return itemStore;
 }
 
 - (void)getColourDetails:(int)itemId itemColors:(NSMutableArray *)itemColors {
-    NSString *queryForColorName = [NSString stringWithFormat:@"SELECT color_id FROM ProductColor WHERE product_id=%i", itemId];
-    sqlite3_stmt *statementForColorName;
-    if (sqlite3_prepare_v2(dataBase, [queryForColorName UTF8String], -1, &statementForColorName, nil)
-        == SQLITE_OK) {
-        while (sqlite3_step(statementForColorName) == SQLITE_ROW) {
-            
-            int colorId = (int) sqlite3_column_int(statementForColorName, 0);
-            NSString * itemColor = @"";
-            
-            NSString *queryForSpecificColorName = [NSString stringWithFormat:@"SELECT name FROM Color WHERE id=%i", colorId];
-            sqlite3_stmt *statementForSpecificColorName;
-            if (sqlite3_prepare_v2(dataBase, [queryForSpecificColorName UTF8String], -1, &statementForSpecificColorName, nil)
-                == SQLITE_OK) {
-                while (sqlite3_step(statementForSpecificColorName) == SQLITE_ROW) {
-                    char * itemColorChar = (char *)sqlite3_column_text(statementForSpecificColorName, 0);
-                    itemColor = [[NSString alloc] initWithUTF8String:itemColorChar];
-                }
-            }
-            sqlite3_finalize(statementForSpecificColorName);
-            
-            [itemColors addObject:itemColor];
-        }
+   // if (![dataBase open])
+   //     [dataBase open];
+    
+    FMResultSet *rs = [dataBase executeQuery:@"select name from color where id = (select color_id from productColor where product_id = ?)", [NSNumber numberWithInt:itemId], nil];
+    [self sanitiseResultSet:rs];
+    
+    while ([rs next]) {
+        [itemColors addObject: [rs stringForColumn:@"name"]];
     }
-    sqlite3_finalize(statementForColorName);
-    sqlite3_close(dataBase);
+    
+    [rs close];
+    //[self closeDataBase];
 }
 
 - (void)loadSizeDetails:(int)itemId itemSizes:(NSMutableArray *)itemSizes {
-    NSString *queryForSizeName = [NSString stringWithFormat:@"SELECT size_id FROM ProductSize WHERE product_id=%i", itemId];
-    sqlite3_stmt *statementForSizeName;
-    if (sqlite3_prepare_v2(dataBase, [queryForSizeName UTF8String], -1, &statementForSizeName, nil)
-        == SQLITE_OK) {
-        while (sqlite3_step(statementForSizeName) == SQLITE_ROW) {
-            
-            int sizeId = (int) sqlite3_column_int(statementForSizeName, 0);
-            NSString * itemSize = @"";
-            
-            NSString *queryForSpecificSizeName = [NSString stringWithFormat:@"SELECT value FROM Size WHERE id=%i", sizeId];
-            sqlite3_stmt *statementForSpecificSizeName;
-            if (sqlite3_prepare_v2(dataBase, [queryForSpecificSizeName UTF8String], -1, &statementForSpecificSizeName, nil)
-                == SQLITE_OK) {
-                while (sqlite3_step(statementForSpecificSizeName) == SQLITE_ROW) {
-                    char * itemSizeChar = (char *)sqlite3_column_text(statementForSpecificSizeName, 0);
-                    itemSize = [[NSString alloc] initWithUTF8String:itemSizeChar];
-                }
-            }
-            sqlite3_finalize(statementForSpecificSizeName);
-            
-            [itemSizes addObject:itemSize];
-        }
+    
+  //  if (![dataBase open])
+        //[dataBase open];
+    
+    FMResultSet *rs = [dataBase executeQuery:@"select value from SIZE where id = (select size_id from productSize where product_id = ?)", [NSNumber numberWithInt:itemId], nil];
+    [self sanitiseResultSet:rs];
+    
+    while ([rs next]) {
+        [itemSizes addObject: [rs stringForColumn:@"value"]];
     }
-    sqlite3_finalize(statementForSizeName);
-    sqlite3_close(dataBase);
+    
+    [rs close];
+   // [self closeDataBase];
 }
 
 - (MMDBrand *)loadBrandDetails:(int)itemBrandId {
     MMDBrand *itemBrand;
-    NSString *queryForBrandName = [NSString stringWithFormat:@"SELECT name FROM Brand WHERE id=%i", itemBrandId];
-    sqlite3_stmt *statementForBrandName;
-    if (sqlite3_prepare_v2(dataBase, [queryForBrandName UTF8String], -1, &statementForBrandName, nil)
-        == SQLITE_OK) {
-        while (sqlite3_step(statementForBrandName) == SQLITE_ROW) {
-            char * brandTitleChar = (char *)sqlite3_column_text(statementForBrandName, 0);
-            NSString * brandTitle = [[NSString alloc] initWithUTF8String:brandTitleChar];
-            
-            itemBrand = [[MMDBrand alloc] initWithId:[NSString stringWithFormat:@"%i", itemBrandId] title:brandTitle image:nil];
-        }
+    NSString *brandTitle;
+    
+  //  if (![dataBase open])
+        //[dataBase open];
+    
+    FMResultSet *rs = [dataBase executeQuery:@"SELECT name FROM Brand WHERE id=?", [NSNumber numberWithInt:itemBrandId], nil];
+    [self sanitiseResultSet:rs];
+    
+    while ([rs next]) {
+        brandTitle = [rs stringForColumn:@"name"];
     }
-    sqlite3_finalize(statementForBrandName);
-    sqlite3_close(dataBase);
+    
+    itemBrand = [[MMDBrand alloc] initWithId:[NSString stringWithFormat:@"%i", itemBrandId] title:brandTitle image:nil];
+    
+    [rs close];
+   // [self closeDataBase];
+    
     return itemBrand;
 }
 
 - (NSString *)loadCategoryDetails:(int)itemCategoryId {
     NSString *itemCategory=@"";
-    NSString *queryForCategoryName = [NSString stringWithFormat:@"SELECT name FROM Category WHERE id=%i", itemCategoryId];
-    sqlite3_stmt *statementForCategoryName;
-    if (sqlite3_prepare_v2(dataBase, [queryForCategoryName UTF8String], -1, &statementForCategoryName, nil)
-        == SQLITE_OK) {
-        while (sqlite3_step(statementForCategoryName) == SQLITE_ROW) {
-            char * itemCategoryChar = (char *)sqlite3_column_text(statementForCategoryName, 0);
-            itemCategory = [[NSString alloc] initWithUTF8String:itemCategoryChar];
-        }
+    
+   // if (![dataBase open])
+    //    [dataBase open];
+
+    
+    FMResultSet *rs = [dataBase executeQuery:@"SELECT name FROM Category WHERE id=?", [NSNumber numberWithInt:itemCategoryId], nil];
+    [self sanitiseResultSet:rs];
+    
+    while ([rs next]) {
+        itemCategory = [rs stringForColumn:@"name"];
     }
-    sqlite3_finalize(statementForCategoryName);
-    sqlite3_close(dataBase);
+    
+    [rs close];
+   // [self closeDataBase];
+    
     return itemCategory;
 }
 
@@ -282,11 +207,13 @@ static MMDDataBase *dataBase;
     
     imagePath = [self loadProductImagePath:itemId];
     
+    NSLog(@"\n");
+    NSLog(@"Getting image for item id %i", itemId);
     NSLog(@"loading path: %@", imagePath);
     
     char *charPath=[imagePath UTF8String];
     
-    if ([imagePath rangeOfString:@"http"].location == NSNotFound) {
+    if (([imagePath rangeOfString:@"http"].location == NSNotFound) && ([imagePath rangeOfString:@"asset1"].location == NSNotFound) && (([imagePath rangeOfString:@"ttp"].location == NSNotFound))) {
         return imagePath;
     } else {
         itemImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithUTF8String:charPath]]]];
@@ -297,80 +224,47 @@ static MMDDataBase *dataBase;
 }
 
 - (void) updateDatabaseWithImagepath:(int)itemId : (NSString *) imagePath {
+    char *filePath=[imagePath UTF8String];
     
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsPath = [paths objectAtIndex:0];
-    NSString *databasePath = [documentsPath stringByAppendingPathComponent:@"maiamall.s3db"];
-        sqlite3 *newDatabase;
+    //if (![dataBase open])
+    //    [dataBase open];
+
+    [dataBase beginTransaction];
     
-        char *filePath=[imagePath UTF8String];
+    BOOL success = [dataBase executeUpdate:@"UPDATE ProductImage SET url= ? WHERE id = ?", [NSString stringWithFormat:@"%s", filePath], [NSNumber numberWithInt:itemId],nil];
     
-        sqlite3_stmt *updateStmt = nil;
-    
-    NSLog(@"database path: %@", databasePath);
-    
-    FMDatabase *dB = [FMDatabase databaseWithPath:databasePath];
-    
-    [dB open];
-    
-        [dB beginTransaction];
-    
-        BOOL success = [dB executeUpdate:@"UPDATE ProductImage SET url= ? WHERE id = ?", [NSString stringWithFormat:@"%s", filePath], [NSNumber numberWithInt:itemId],nil];
-    
-  /*  if(sqlite3_open([databasePath UTF8String], &newDatabase) == SQLITE_OK)
-    {
-        
-        const char *sql = "update ProductImage set url = ? where id = ?";
-    
-        if(sqlite3_prepare_v2(newDatabase, sql, -1, &updateStmt, NULL) != SQLITE_OK)
-            NSLog(@"Error while creating update statement. %s", sqlite3_errmsg(newDatabase));
-    
-    
-        sqlite3_bind_text(updateStmt, 1, filePath, -1, SQLITE_STATIC);
-        sqlite3_bind_int(updateStmt, 2, itemId);
-    
-        char errmsg;
-       // sqlite3_exec(newDatabase, "COMMIT", NULL, NULL, &errmsg);
-        
-        if(SQLITE_DONE != sqlite3_step(updateStmt)) {
-            NSLog(@"Error while updating. %s", sqlite3_errmsg(dataBase));
-        } else {
-            sqlite3_reset(updateStmt);
-        }
-    
-        sqlite3_finalize(updateStmt);
+    if(success) {
+        NSLog(@"Updated image URL for item id %i", itemId);
+        [dataBase commit];
+    } else {
+        NSLog(@"Error updating database with new image path for item id %i", itemId);
     }
-        //[self saveDataBase];
-        sqlite3_close(newDatabase);*/
-    
-        if(success) {
-            NSLog(@"Updated image URL for item id %i", itemId);
-        
-            [dB commit];
-            [dB close];
-        }
-    
+}
+
+- (void)sanitiseResultSet:(FMResultSet *)rs {
+    if (!rs) {
+        NSLog(@"%s: executeQuery failed: %@", __FUNCTION__, [dataBase lastErrorMessage]);
+        return;
+    }
 }
 
 - (NSString *)loadProductImagePath:(int)itemId {
-    UIImage *itemImage;
     NSString *urlString;
     
-    NSLog(@"in here");
+  //  if (![dataBase open])
+   //     [dataBase open];
+
     
-    NSString *queryForItemImage = [NSString stringWithFormat:@"SELECT url FROM ProductImage WHERE product_id=%i", itemId];
-    sqlite3_stmt *statementForItemImage;
-    if (sqlite3_prepare_v2(dataBase, [queryForItemImage UTF8String], -1, &statementForItemImage, nil)
-        == SQLITE_OK) {
-        while (sqlite3_step(statementForItemImage) == SQLITE_ROW) {
-            char * itemImageURL = (char *)sqlite3_column_text(statementForItemImage, 0);
-            
-            urlString = [NSString stringWithUTF8String: itemImageURL];
-        }
+    FMResultSet *rs = [dataBase executeQuery:@"SELECT url FROM ProductImage WHERE product_id= ? ", [NSNumber numberWithInt:itemId],nil];
+    [self sanitiseResultSet:rs];
+    
+    while ([rs next]) {
+        urlString = [rs stringForColumn:@"url"];
     }
     
-    sqlite3_finalize(statementForItemImage);
-    sqlite3_close(dataBase);
+    [rs close];
+  //  [self closeDataBase];
+    
     return urlString;
 }
 
@@ -381,8 +275,6 @@ static MMDDataBase *dataBase;
     NSString *documentsDirectory = [paths objectAtIndex:0];
     
     NSString *imagePath =[documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png",[self randomStringWithLength:10]]];
-    
-    NSLog((@"pre writing to file"));
     if (![imageData writeToFile:imagePath atomically:NO])
     {
         NSLog((@"Failed to cache image data to disk"));
@@ -396,74 +288,66 @@ static MMDDataBase *dataBase;
 
 - (NSMutableArray *)getItems {
     NSMutableArray * retval = [[NSMutableArray alloc] init];
-    NSString *queryForItems = @"SELECT * FROM Product where id > 159 and id <283";
-    sqlite3_stmt *statementForItems;
+    
+   // if (![dataBase open])
+   //     [dataBase open];
 
     
-    if (sqlite3_prepare_v2(dataBase, [queryForItems UTF8String], -1, &statementForItems, nil)
-        == SQLITE_OK) {
+    FMResultSet *rs = [dataBase executeQuery:@"SELECT * FROM Product where id"];
+    [self sanitiseResultSet:rs];
+    
+    while ([rs next]) {
+        NSString *itemTitle = @"";
+        NSString *itemDescription = @"";
+        NSString *itemCategory = @"";
+        NSString *itemSKU = @"";
+        NSMutableArray *itemColors = [[NSMutableArray alloc] init];
+        NSMutableArray *itemSizes = [[NSMutableArray alloc] init];
+        MMDBrand * itemBrand;
+        MMDStore* itemStore;
+        NSString *itemURLChar=@"";
         
-        NSLog(@"getting here");
+        int itemId = [rs intForColumn:@"id"];
+        itemURLChar = [[NSString alloc] initWithString:[rs stringForColumn:@"url"]];
+        itemTitle = [[NSString alloc] initWithString:[rs stringForColumn:@"title"]];
+        itemDescription = [[NSString alloc] initWithString:[rs stringForColumn:@"description"]];
+        itemSKU = [[NSString alloc] initWithString:[rs stringForColumn:@"sku"]];
         
-        while (sqlite3_step(statementForItems) == SQLITE_ROW) {
+        float itemPrice = [[rs stringForColumn:@"price"] floatValue];
+        int itemGender = [rs intForColumn:@"gender"];
+        int itemBrandId = [rs intForColumn:@"brand_id"];
+        int itemStoreId = [rs intForColumn:@"store_id"];
+        int itemCategoryId = [rs intForColumn:@"category_id"];
+        
+        if(itemStoreId != 6 && itemStoreId != 1 && itemStoreId != 5)
+        {
+            int itemLiked = [rs intForColumn:@"liked"];
             
-            NSString *itemTitle = @"";
-            NSString *itemDescription = @"";
-            NSString *itemCategory = @"";
-            NSString *itemSKU = @"";
-            NSMutableArray *itemColors = [[NSMutableArray alloc] init];
-            NSMutableArray *itemSizes = [[NSMutableArray alloc] init];
-            MMDBrand * itemBrand;
-            MMDStore* itemStore;
+            int itemHasOffer = [rs intForColumn:@"hasOffer"];
             
-            int itemId = (int) sqlite3_column_int(statementForItems, 0);
-            char *itemURLChar = (char*)sqlite3_column_text(statementForItems, 1);
+            itemBrand = [self loadBrandDetails:itemBrandId];
             
-            char *itemTitleChar = (char *)sqlite3_column_text(statementForItems, 2);
-            itemTitle = [[NSString alloc] initWithUTF8String:itemTitleChar];
+            itemCategory = [self loadCategoryDetails:itemCategoryId];
             
-            char *itemDescriptionChar = (char *) sqlite3_column_text(statementForItems, 3);
-            itemDescription = [[NSString alloc] initWithUTF8String:itemDescriptionChar];
+            itemStore = [self getStoreDetails:itemStoreId];
             
-            char *itemSKUChar = (char *) sqlite3_column_text(statementForItems, 4);
-            itemSKU = [[NSString alloc] initWithUTF8String:itemSKUChar];
+            [self getColourDetails:itemId itemColors:itemColors];
             
-            float itemPrice = (float) sqlite3_column_double(statementForItems, 5);
-            int itemGender = (int) sqlite3_column_int(statementForItems, 6);
-            int itemBrandId = (int) sqlite3_column_int(statementForItems, 7);
-            int itemStoreId = (int) sqlite3_column_int(statementForItems, 8);
-            int itemCategoryId = (int) sqlite3_column_int(statementForItems, 9);
+            [self loadSizeDetails:itemId itemSizes:itemSizes];
             
-            int itemLiked = (int)sqlite3_column_int(statementForItems, 10);
+            NSString *imagePath = [self manipulateImage:itemId];
             
-            int itemHasOffer = (int)sqlite3_column_int(statementForItems, 11);
+            if (imagePath != nil && ![imagePath isEqualToString:@"(null)"]) {
             
-            if (itemStoreId != 5 && itemStoreId != 6 && itemStoreId != 1) {
-                itemBrand = [self loadBrandDetails:itemBrandId];
-                
-                
-                itemCategory = [self loadCategoryDetails:itemCategoryId];
-                
-                itemStore = [self getStoreDetails:itemStoreId];
-                
-                [self getColourDetails:itemId itemColors:itemColors];
-                
-                [self loadSizeDetails:itemId itemSizes:itemSizes];
-                
-                NSString *imagePath = [self manipulateImage:itemId];
-                
-#warning add offers
-                
                 MMDItem * item = [[MMDItem alloc] initWithImagePath:[NSString stringWithFormat:@"%i", itemId] title:itemTitle description:itemDescription imagePath:imagePath SKU:itemSKU collection:@"" category:itemCategory price:itemPrice store:itemStore brand:itemBrand gender:itemGender color:itemColors size:itemSizes];
-                
+            
                 [retval addObject:item];
             }
         }
-        sqlite3_finalize(statementForItems);
-        sqlite3_close(dataBase);
-    } else {
-        NSLog(@"not good");
     }
+    
+    [rs close];
+   // [self closeDataBase];
     
     return retval;
 }
@@ -481,17 +365,23 @@ static MMDDataBase *dataBase;
 
 - (NSMutableArray*)getOffers {
     NSMutableArray * retval = [[NSMutableArray alloc] init];
-    NSString *queryForOffers = @"SELECT * FROM Offer";
-    sqlite3_stmt *statementForOffers;
-    if (sqlite3_prepare_v2(dataBase, [queryForOffers UTF8String], -1, &statementForOffers, nil)
-        == SQLITE_OK) {
-        while (sqlite3_step(statementForOffers) == SQLITE_ROW) {
-            
-            
-            
-        }
+    
+  //  if (![dataBase open])
+   //     [dataBase open];
+
+
+    FMResultSet *rs = [dataBase executeQuery:@"SELECT * FROM Offer"];
+    [self sanitiseResultSet:rs];
+    
+    while ([rs next]) {
+        //[retval addObject:[rs stringForColumn:@"price"]];
     }
+    
+    [rs close];
+   // [self closeDataBase];
+    
     return retval;
-}
+
+ }
 
 @end

@@ -61,9 +61,6 @@
         [self.arrayWithItemsToPurchase removeAllObjects];
     }
     [self saveCartIntoDefaults];
-    dispatch_async(dispatch_queue_create("Save in Data Base", nil), ^{
-        [[MMDDataBase database] saveDataBase];
-    });
 }
 
 @end

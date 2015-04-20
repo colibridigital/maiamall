@@ -49,7 +49,6 @@
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-     [[MMDDataBase database] saveDataBase];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -64,47 +63,32 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    
-    [[MMDDataBase database] saveDataBase];
     [[MMDDataBase database] closeDataBase];
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
 - (void) copyDatabaseIfNeeded {
-    
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    
     NSError *error;
-    
     NSString *dbPath = [self getDBPath];
     
     BOOL success = [fileManager fileExistsAtPath:dbPath];
-    
     if(!success)
-        
     {
-        
-        NSString *defaultDBPath = [[[NSBundle mainBundle] resourcePath]
-                                   
-                                   stringByAppendingPathComponent:@"maiamall.s3db"];
-        
+        NSString *defaultDBPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"maiamall.s3db"];
+    
         success = [fileManager copyItemAtPath:defaultDBPath toPath:dbPath error:&error];
-        
+
         if (!success)
-            
             NSAssert1(0, @"Failed to create database file with message '%@'.", [error localizedDescription]);
-        
     }
 }
 
 - (NSString *) getDBPath {
-    
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory , NSUserDomainMask, YES);
-    
     NSString *documentsDir = [paths objectAtIndex:0];
     
     return [documentsDir stringByAppendingPathComponent:@"maiamall.s3db"];
-    
 }
 
 @end

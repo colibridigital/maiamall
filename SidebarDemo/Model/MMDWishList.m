@@ -46,9 +46,6 @@
     [item setItemIsInWishList:YES];
     [self.wishList addObject:item];
     [self saveWishListIntoUserDefaults];
-    dispatch_async(dispatch_queue_create("Save in Data Base", nil), ^{
-        [[MMDDataBase database] saveDataBase];
-    });
 }
 
 - (void)removeItemFromWishListAtObjectIndex:(NSUInteger)index {

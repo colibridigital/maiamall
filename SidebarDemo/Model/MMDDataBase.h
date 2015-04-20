@@ -7,18 +7,19 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <sqlite3.h>
+#import "AppDelegate.h"
+#import "FMDatabase.h"
 
 @interface MMDDataBase : NSObject <NSCoding> {
-    sqlite3 * dataBase;
+    FMDatabase * dataBase;
 }
 
 @property (strong, nonatomic) NSMutableArray * arrayWithItems;
 @property (strong, nonatomic) NSMutableArray * arrayWithOffers;
 
 + (id)database;
-- (void)saveDataBase;
 - (void)initDatabase;
+- (void)saveDatabase;
 - (void)closeDataBase;
 
 @end

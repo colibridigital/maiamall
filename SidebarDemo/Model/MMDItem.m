@@ -190,9 +190,6 @@
     }
     self.itemNumberInCart++;
     [[MMDCart cart] saveCartIntoDefaults];
-    dispatch_async(dispatch_queue_create("Save in Data Base", nil), ^{
-        [[MMDDataBase database] saveDataBase];
-    });
 }
 
 - (void)decrementItemFromCart {
@@ -200,26 +197,17 @@
         self.itemNumberInCart--;
     }
     [[MMDCart cart] saveCartIntoDefaults];
-    dispatch_async(dispatch_queue_create("Save in Data Base", nil), ^{
-        [[MMDDataBase database] saveDataBase];
-    });
 }
 
 - (void)annulateItemInCart {
     self.itemNumberInCart = 0;
     [[MMDCart cart] saveCartIntoDefaults];
-    dispatch_async(dispatch_queue_create("Save in Data Base", nil), ^{
-        [[MMDDataBase database] saveDataBase];
-    });
 }
 
 - (void)removeItemFromCart {
     self.itemNumberInCart = 0;
     [[[MMDCart cart] arrayWithItemsToPurchase] removeObject:self];
     [[MMDCart cart] saveCartIntoDefaults];
-    dispatch_async(dispatch_queue_create("Save in Data Base", nil), ^{
-        [[MMDDataBase database] saveDataBase];
-    });
 }
 
 @end

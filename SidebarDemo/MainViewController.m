@@ -65,6 +65,31 @@
     self.arrayWithSearchResults = [[NSMutableArray alloc] init];
     
     self.genderWasChanged = NO;
+    
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:kDataBaseWasInitiated]) {
+        MBProgressHUD * hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.mode = MBProgressHUDModeIndeterminate;
+        hud.labelText = @"Wait. Initialiazing Database";
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            [MMDDataBase database];
+            
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            
+            [self getTrendingItems];
+        });
+    } else {
+        MBProgressHUD * hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.mode = MBProgressHUDModeIndeterminate;
+        hud.labelText = @"Wait. Loading Database";
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            [self getTrendingItems];
+        });
+        
+    }
 
 }
 
@@ -72,12 +97,11 @@
     [super viewWillAppear:animated];
     
     settingsViewController.delegate = self;
-    
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:kDataBaseWasInitiated]) {
-        [self getTrendingItems];
-    } 
+
+    [self getTrendingItems];
     
 }
+    
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self.searchBar resignFirstResponder];
