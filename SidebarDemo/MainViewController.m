@@ -97,8 +97,21 @@
     [super viewWillAppear:animated];
     
     settingsViewController.delegate = self;
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:kDataBaseWasInitiated]) {
+        MBProgressHUD * hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.mode = MBProgressHUDModeIndeterminate;
+        hud.labelText = @"Wait. Loading Database";
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            
+            [self getTrendingItems];
+        });
+        
+    }
 
-    [self getTrendingItems];
+   // [self getTrendingItems];
     
 }
     
