@@ -61,6 +61,8 @@
     
     self.tabBarController.delegate = self;
   
+    settingsViewController.delegate = self;
+
     
     self.arrayWithSearchResults = [[NSMutableArray alloc] init];
     
@@ -79,7 +81,7 @@
             
             [self getTrendingItems];
         });
-    } else {
+    } /*else {
         MBProgressHUD * hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         hud.mode = MBProgressHUDModeIndeterminate;
         hud.labelText = @"Wait. Loading Database";
@@ -89,11 +91,11 @@
             [self getTrendingItems];
         });
         
-    }
+    }*/
 
 }
 
--(void)viewWillAppear:(BOOL)animated {
+/*-(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
     settingsViewController.delegate = self;
@@ -113,7 +115,7 @@
 
    // [self getTrendingItems];
     
-}
+}*/
     
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
@@ -122,13 +124,13 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:kDataBaseWasInitiated]) {
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:kDataBaseWasInitiated]) {
         MBProgressHUD * hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         hud.mode = MBProgressHUDModeIndeterminate;
-        hud.labelText = @"Wait. Initialiazing Database";
+        hud.labelText = @"Wait. Loading Database";
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [MMDDataBase database];
+        //    [MMDDataBase database];
             
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             
@@ -150,7 +152,7 @@
     
     if (self.arrayWithRecommendedItems.count == 0) {
        
-        dispatch_async(dispatch_queue_create("Trend loading", nil), ^{
+       // dispatch_async(dispatch_queue_create("Trend loading", nil), ^{
             NSMutableArray * tempArray = [[NSMutableArray alloc] init];
         
                 for (MMDItem* item in [[MMDDataBase database] arrayWithItems]) {
@@ -183,11 +185,11 @@
                     [tempArray removeObjectAtIndex:index];
                 }
             }
-         dispatch_async(dispatch_get_main_queue(), ^{
+         //dispatch_async(dispatch_get_main_queue(), ^{
                 
              [self.productCollectionView reloadData];
-         });
-        });
+        // });
+        //});
     }
     
 }

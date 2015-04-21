@@ -231,7 +231,7 @@ AppDelegate* appDel;
 
     [dataBase beginTransaction];
     
-    BOOL success = [dataBase executeUpdate:@"UPDATE ProductImage SET url= ? WHERE id = ?", [NSString stringWithFormat:@"%s", filePath], [NSNumber numberWithInt:itemId],nil];
+    BOOL success = [dataBase executeUpdate:@"UPDATE ProductImage SET url= ? WHERE product_id = ?", [NSString stringWithFormat:@"%s", filePath], [NSNumber numberWithInt:itemId],nil];
     
     if(success) {
         NSLog(@"Updated image URL for item id %i", itemId);
@@ -293,7 +293,7 @@ AppDelegate* appDel;
    //     [dataBase open];
 
     
-    FMResultSet *rs = [dataBase executeQuery:@"SELECT * FROM Product where id"];
+    FMResultSet *rs = [dataBase executeQuery:@"SELECT * FROM Product"];
     [self sanitiseResultSet:rs];
     
     while ([rs next]) {
@@ -319,8 +319,8 @@ AppDelegate* appDel;
         int itemStoreId = [rs intForColumn:@"store_id"];
         int itemCategoryId = [rs intForColumn:@"category_id"];
         
-        if(itemStoreId != 6 && itemStoreId != 1 && itemStoreId != 5)
-        {
+     //   if(itemStoreId != 6 && itemStoreId != 1) //add here 5 for M&S
+       // {
             int itemLiked = [rs intForColumn:@"liked"];
             
             int itemHasOffer = [rs intForColumn:@"hasOffer"];
@@ -342,7 +342,7 @@ AppDelegate* appDel;
                 MMDItem * item = [[MMDItem alloc] initWithImagePath:[NSString stringWithFormat:@"%i", itemId] title:itemTitle description:itemDescription imagePath:imagePath SKU:itemSKU collection:@"" category:itemCategory price:itemPrice store:itemStore brand:itemBrand gender:itemGender color:itemColors size:itemSizes];
             
                 [retval addObject:item];
-            }
+            //}
         }
     }
     
