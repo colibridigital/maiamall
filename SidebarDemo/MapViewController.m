@@ -350,7 +350,7 @@ didTapAtCoordinate:(CLLocationCoordinate2D)coordinate {
         CGFloat widthOfMarkersBoard = 1;
         CGFloat heightOfMarkersTail = heightOfMarker/10 + 1; //this is just works ;)
         
-        UIImage * imageOfBubble = [UIImage imageNamed:@"bubbleView"];
+        UIImage * imageOfBubble = [UIImage imageNamed:@"BubbleView"];
         
         UIGraphicsBeginImageContext(CGSizeMake(widthOfMarker, heightOfMarker));
         [imageOfBubble drawInRect:CGRectMake(0, 0, widthOfMarker, heightOfMarker)];
@@ -406,7 +406,7 @@ didTapAtCoordinate:(CLLocationCoordinate2D)coordinate {
         
         self.filterMenuController.map= self;
         
-        self.anotherPopoverController.popoverContentSize = CGSizeMake(220, 360);
+        self.anotherPopoverController.popoverContentSize = CGSizeMake(220, 330);
         
         self.anotherPopoverController.delegate = self;
         

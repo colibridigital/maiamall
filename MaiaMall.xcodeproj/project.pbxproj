@@ -21,6 +21,8 @@
 		151902F61AD4632200644C50 /* suit.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 151902F51AD4632200644C50 /* suit.jpg */; };
 		151902FA1AD46E2300644C50 /* TrendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 151902F91AD46E2300644C50 /* TrendsViewController.m */; };
 		152F1A271AE9334A001C5571 /* MapViewForItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 152F1A261AE93349001C5571 /* MapViewForItemViewController.m */; };
+		152F1A291AE93D17001C5571 /* Price Tag Pound-50-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 152F1A281AE93D17001C5571 /* Price Tag Pound-50-2.png */; };
+		152F1A2B1AE93DF3001C5571 /* BubbleView.png in Resources */ = {isa = PBXBuildFile; fileRef = 152F1A2A1AE93DF3001C5571 /* BubbleView.png */; };
 		1536F2E41AD49DA200E41C57 /* Filter-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 1536F2E01AD49DA200E41C57 /* Filter-50.png */; };
 		1536F2E51AD49DA200E41C57 /* Home-50 copy.png in Resources */ = {isa = PBXBuildFile; fileRef = 1536F2E11AD49DA200E41C57 /* Home-50 copy.png */; };
 		1536F2E61AD49DA200E41C57 /* News-50-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 1536F2E21AD49DA200E41C57 /* News-50-2.png */; };
@@ -173,6 +175,8 @@
 		151902F91AD46E2300644C50 /* TrendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrendsViewController.m; sourceTree = "<group>"; };
 		152F1A251AE93349001C5571 /* MapViewForItemViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewForItemViewController.h; sourceTree = "<group>"; };
 		152F1A261AE93349001C5571 /* MapViewForItemViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewForItemViewController.m; sourceTree = "<group>"; };
+		152F1A281AE93D17001C5571 /* Price Tag Pound-50-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Price Tag Pound-50-2.png"; sourceTree = "<group>"; };
+		152F1A2A1AE93DF3001C5571 /* BubbleView.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BubbleView.png; sourceTree = "<group>"; };
 		1536F2E01AD49DA200E41C57 /* Filter-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Filter-50.png"; sourceTree = "<group>"; };
 		1536F2E11AD49DA200E41C57 /* Home-50 copy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Home-50 copy.png"; sourceTree = "<group>"; };
 		1536F2E21AD49DA200E41C57 /* News-50-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "News-50-2.png"; sourceTree = "<group>"; };
@@ -873,6 +877,8 @@
 		F4EECF34177C9A1E00778578 /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				152F1A2A1AE93DF3001C5571 /* BubbleView.png */,
+				152F1A281AE93D17001C5571 /* Price Tag Pound-50-2.png */,
 				1536F2EA1AD49EC600E41C57 /* Menu-50.png */,
 				1536F2E81AD49E4B00E41C57 /* Location-50.png */,
 				1536F2E01AD49DA200E41C57 /* Filter-50.png */,
@@ -1017,6 +1023,7 @@
 				1536F2EB1AD49EC600E41C57 /* Menu-50.png in Resources */,
 				15ECDE611ACF36EA00F6107F /* GoogleMaps.bundle in Resources */,
 				15E9687D1ACFF3D1003D20B8 /* bannerNotify.png in Resources */,
+				152F1A291AE93D17001C5571 /* Price Tag Pound-50-2.png in Resources */,
 				1575627A1ABAF2FD001FAE38 /* blouse.png in Resources */,
 				15AD00111AB9CDD400B8B1D1 /* MaiaMall-Logo-Light.jpg in Resources */,
 				F4EECF2B177C99F400778578 /* MainStoryboard.storyboard in Resources */,
@@ -1068,6 +1075,7 @@
 				15E753221AC2C82900F2D39D /* harrods.png in Resources */,
 				151902E21AD3EF1200644C50 /* Add To Favorites-50.png in Resources */,
 				15AD00001AB9A03700B8B1D1 /* Location Filled-50.png in Resources */,
+				152F1A2B1AE93DF3001C5571 /* BubbleView.png in Resources */,
 				F4FE87FB1780081300CB3DA8 /* comments_photo.jpg in Resources */,
 				F4FE87FC1780081300CB3DA8 /* wishlist_photo.jpg in Resources */,
 				F4FE87FF178010F000CB3DA8 /* bookmark_photo.jpg in Resources */,
