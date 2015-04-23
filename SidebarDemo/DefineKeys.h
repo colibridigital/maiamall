@@ -21,6 +21,7 @@
 #define kItemTitle @"itemTitle"
 #define kItemDescription @"itemDescription"
 #define kItemImage @"itemImage"
+#define kItemImagePath @"itemImagePath"
 #define kItemSKU @"itemSKU"
 #define kItemCollection @"itemCollection"
 #define kItemCategory @"itemCategory"

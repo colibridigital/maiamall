@@ -40,6 +40,7 @@
     [aCoder encodeObject:self.itemDescription forKey:kItemDescription];
     NSData* imageData = UIImageJPEGRepresentation(self.itemImage, 1.0);
     [aCoder encodeObject:imageData forKey:kItemImage];
+    [aCoder encodeObject:self.itemImagePath forKey:kItemImagePath];
     [aCoder encodeObject:self.itemSKU forKey:kItemSKU];
     [aCoder encodeObject:self.itemCollection forKey:kItemCollection];
     [aCoder encodeObject:self.itemCategory forKey:kItemCategory];
@@ -63,6 +64,7 @@
     self.itemDescription = [aDecoder decodeObjectForKey:kItemDescription];
     NSData* myEncodedImageData = [aDecoder decodeObjectForKey:kItemImage];
     self.itemImage = [[UIImage alloc] initWithData:myEncodedImageData];
+    self.itemImagePath = [aDecoder decodeObjectForKey:kItemImagePath];
     self.itemSKU = [aDecoder decodeObjectForKey:kItemSKU];
     self.itemCollection = [aDecoder decodeObjectForKey:kItemCollection];
     self.itemCategory = [aDecoder decodeObjectForKey:kItemCategory];
@@ -163,6 +165,7 @@
     self.itemBrand = item.itemBrand;
     self.itemIsInWishList = item.itemIsInWishList;
     self.itemGender = item.itemGender;
+    self.itemImagePath = item.itemImagePath;
     self.itemColors = [[NSMutableArray alloc] initWithArray:[item.itemColors copy]];
     self.itemSizes = [[NSMutableArray alloc] initWithArray:[item.itemSizes copy]];
     self.itemNumberInCart = item.itemNumberInCart;

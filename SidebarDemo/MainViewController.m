@@ -73,7 +73,16 @@
         hud.mode = MBProgressHUDModeIndeterminate;
         hud.labelText = @"Wait. Initialiazing Database";
         
+      /*  float progress = 0.0;
+        
+        while (progress < 1.0) {
+            progress += 0.01;
+            hud.progress = progress; //fix this progress counting on the items when they get downloaded
+            
+            usleep(50000);*/
+        
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
             
             [MMDDataBase database];
             
@@ -81,7 +90,8 @@
             
             [self getTrendingItems];
         });
-    } /*else {
+ //   }
+    }/*else {
         MBProgressHUD * hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         hud.mode = MBProgressHUDModeIndeterminate;
         hud.labelText = @"Wait. Loading Database";
@@ -328,9 +338,12 @@
         
         NSString *imagePath = ((MMDItem*)[self.arrayWithRecommendedItems objectAtIndex:indexPath.item]).itemImagePath;
         
-        UIImage *itemImage = [UIImage imageWithContentsOfFile:imagePath];
+        if (imagePath!= nil && ![imagePath isEqualToString:@"(null)"]) {
         
-        cell.productImage.image = itemImage;
+            UIImage *itemImage = [UIImage imageWithContentsOfFile:imagePath];
+        
+            cell.productImage.image = itemImage;
+        }
         
         return cell;
     }

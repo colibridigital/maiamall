@@ -32,7 +32,7 @@ AppDelegate* appDel;
     return shared_instance;
 }
 
-- (void)encodeWithCoder:(NSCoder *)aCoder {
+/*- (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.arrayWithItems forKey:kItemsInDataBase];
     [aCoder encodeObject:self.arrayWithOffers forKey:kOffersInDataBase];
 }
@@ -51,7 +51,7 @@ AppDelegate* appDel;
     }
     
     return self;
-}
+}*/
 
 - (id)init {
     if ((self = [super init])) {
@@ -70,9 +70,45 @@ AppDelegate* appDel;
     
     [dataBase open];
     
+    
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:kDataBaseWasInitiated]) {
+    
     self.arrayWithItems = [[NSMutableArray alloc] initWithArray:[self getItems]];
     self.arrayWithOffers = [[NSMutableArray alloc] initWithArray:[self getOffers]];
+        
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.arrayWithItems];
+    [[NSUserDefaults standardUserDefaults] setObject:data forKey:kItemsInDataBase];
+        
+        
+    NSData *data2 = [NSKeyedArchiver archivedDataWithRootObject:self.arrayWithOffers];
+    [[NSUserDefaults standardUserDefaults] setObject:data2 forKey:kOffersInDataBase];
+    
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kDataBaseWasInitiated];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+        
+    } else {
+        
+        NSUserDefaults *currentDefaults = [NSUserDefaults standardUserDefaults];
+        NSData *dataRepresentingSavedArray = [currentDefaults objectForKey:kItemsInDataBase];
+        if (dataRepresentingSavedArray != nil)
+        {
+            NSArray *oldSavedArray = [NSKeyedUnarchiver unarchiveObjectWithData:dataRepresentingSavedArray];
+            if (oldSavedArray != nil)
+                self.arrayWithItems = [[NSMutableArray alloc] initWithArray:oldSavedArray];
+            else
+                self.arrayWithItems = [[NSMutableArray alloc] init];
+        }
+        
+        NSData *dataRepresentingSavedArray2 = [currentDefaults objectForKey:kOffersInDataBase];
+        if (dataRepresentingSavedArray2 != nil)
+        {
+            NSArray *oldSavedArray2 = [NSKeyedUnarchiver unarchiveObjectWithData:dataRepresentingSavedArray2];
+            if (oldSavedArray2 != nil)
+                self.arrayWithOffers = [[NSMutableArray alloc] initWithArray:oldSavedArray2];
+            else
+                self.arrayWithOffers = [[NSMutableArray alloc] init];
+        }
+    }
     [self closeDataBase];
 }
 
@@ -291,7 +327,6 @@ AppDelegate* appDel;
     
    // if (![dataBase open])
    //     [dataBase open];
-
     
     FMResultSet *rs = [dataBase executeQuery:@"SELECT * FROM Product"];
     [self sanitiseResultSet:rs];
@@ -319,8 +354,8 @@ AppDelegate* appDel;
         int itemStoreId = [rs intForColumn:@"store_id"];
         int itemCategoryId = [rs intForColumn:@"category_id"];
         
-     //   if(itemStoreId != 6 && itemStoreId != 1) //add here 5 for M&S
-       // {
+        if(itemStoreId != 6 && itemStoreId != 1 && itemStoreId !=5 && itemStoreId !=8) //add here 5 for M&S
+        {
             int itemLiked = [rs intForColumn:@"liked"];
             
             int itemHasOffer = [rs intForColumn:@"hasOffer"];
@@ -342,7 +377,7 @@ AppDelegate* appDel;
                 MMDItem * item = [[MMDItem alloc] initWithImagePath:[NSString stringWithFormat:@"%i", itemId] title:itemTitle description:itemDescription imagePath:imagePath SKU:itemSKU collection:@"" category:itemCategory price:itemPrice store:itemStore brand:itemBrand gender:itemGender color:itemColors size:itemSizes];
             
                 [retval addObject:item];
-            //}
+            }
         }
     }
     
