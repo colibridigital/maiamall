@@ -14,6 +14,7 @@
 #import "ProductDetailViewController.h"
 #import "CollectionListViewController.h"
 #import "MapViewController.h"
+#import "ProductListViewController.h"
 
 @interface ProfileViewController ()
 
@@ -26,6 +27,25 @@
     [super viewDidLoad];
     
     [self initialiseMenuItems];
+    
+    self.summerItems =  [[NSMutableArray alloc] init];
+    self.summerItems = [[MMDDataBase database] getSummerCollectionItems];
+    
+    self.shoesItems =  [[NSMutableArray alloc] init];
+    self.shoesItems = [[MMDDataBase database] getShoesCollection];
+    
+    self.bagsItems =  [[NSMutableArray alloc] init];
+    self.bagsItems = [[MMDDataBase database] getBagsCollection];
+    
+    self.shirtsItems =  [[NSMutableArray alloc] init];
+    self.shirtsItems = [[MMDDataBase database] getShirtsCollection];
+    
+    self.formalItems =  [[NSMutableArray alloc] init];
+    self.formalItems = [[MMDDataBase database] getFormalCollection];
+    
+    self.favCollItems =  [[NSMutableArray alloc] init];
+    self.favCollItems = [[MMDDataBase database] getFavouriteCollection];
+    
     
 }
 
@@ -114,7 +134,7 @@
     if (collectionView == self.collsCollectionView) {
         return 5;
     } else if (collectionView == self.favsCollectionView) {
-        return 20;
+        return 18;
     }
     
     else return 0;
@@ -126,12 +146,53 @@
     if (collectionView == self.collsCollectionView) {
         CollectionsCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"COLL_CELL" forIndexPath:indexPath];
         
+        if (indexPath.row == 0) {
+            
+            NSString *imagePath = ((MMDItem*)[self.summerItems objectAtIndex:3]).itemImagePath;
+            
+            UIImage *itemImage = [UIImage imageWithContentsOfFile:imagePath];
+            
+            cell.detailImage.image = itemImage;
+        } else if (indexPath.row == 1) {
+            NSString *imagePath = ((MMDItem*)[self.shoesItems objectAtIndex:1]).itemImagePath;
+            
+            UIImage *itemImage = [UIImage imageWithContentsOfFile:imagePath];
+            
+            cell.detailImage.image = itemImage;
+        }
+        else if (indexPath.row == 2) {
+            NSString *imagePath = ((MMDItem*)[self.bagsItems objectAtIndex:2]).itemImagePath;
+            
+            UIImage *itemImage = [UIImage imageWithContentsOfFile:imagePath];
+            
+            cell.detailImage.image = itemImage;
+        } else if (indexPath.row == 3) {
+            NSString *imagePath = ((MMDItem*)[self.formalItems objectAtIndex:3]).itemImagePath;
+            
+            UIImage *itemImage = [UIImage imageWithContentsOfFile:imagePath];
+            
+            cell.detailImage.image = itemImage;
+        } else if (indexPath.row == 4) {
+            NSString *imagePath = ((MMDItem*)[self.shirtsItems objectAtIndex:1]).itemImagePath;
+            
+            UIImage *itemImage = [UIImage imageWithContentsOfFile:imagePath];
+            
+            cell.detailImage.image = itemImage;
+        }
+        
         return cell;
     } else {
         ProductCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"PROD_CELL" forIndexPath:indexPath];
         
+        NSString *imagePath = ((MMDItem*)[self.favCollItems objectAtIndex:indexPath.row]).itemImagePath;
+        
+        UIImage *itemImage = [UIImage imageWithContentsOfFile:imagePath];
+        
+        cell.productImage.image = itemImage;
+        
+        
         return cell;
-
+        
     }
     
 }
@@ -139,13 +200,15 @@
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
     if (collectionView == self.favsCollectionView) {
-    
+        
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
         
         ProductDetailViewController *prodDetail = [storyboard instantiateViewControllerWithIdentifier:@"prodDetailView"];
-    
-       // UINavigationController *det = [storyboard instantiateViewControllerWithIdentifier:@"detNav"];
-    
+        
+        [prodDetail initWithItem:(MMDItem*)[self.favCollItems objectAtIndex:indexPath.row]];
+        
+        // UINavigationController *det = [storyboard instantiateViewControllerWithIdentifier:@"detNav"];
+        
         [self showViewController:prodDetail sender:self];
     } else if (collectionView == self.collsCollectionView){
         
@@ -153,9 +216,86 @@
         
         CollectionListViewController *prod = [storyboard instantiateViewControllerWithIdentifier:@"collectionListView"];
         
+        if (indexPath.row == 0) {
+            
+            [prod initWithItemsArray:self.summerItems];
+            
+            prod.colText = @"Summer Collection";
+            
+        } else if (indexPath.row == 1) {
+            [prod initWithItemsArray:self.shoesItems];
+            
+            [prod initWithTitleText: @"Shoes Collection"];
+            
+            prod.colText = @"Shoes Collection";
+            
+        } else if (indexPath.row == 2) {
+            [prod initWithItemsArray:self.bagsItems];
+            
+            [prod initWithTitleText: @"Bags Collection"];
+            
+            prod.colText = @"Bags Collection";
+            
+        } else if (indexPath.row == 3) {
+            [prod initWithItemsArray:self.formalItems];
+            
+            [prod initWithTitleText: @"Formal Items Collection"];
+            
+            prod.colText = @"Formal Items Collection";
+            
+        } else if (indexPath.row == 4) {
+            [prod initWithItemsArray:self.shirtsItems];
+            
+            [prod initWithTitleText: @"Shirts Collections"];
+            
+            prod.colText = @"Shirts Collection";
+        }
+        
         [self showViewController:prod sender:self];
+        
+    }
+    
+}
 
-    } 
+-(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    
+    //UINavigationController *prodListDetails = [storyboard instantiateViewControllerWithIdentifier:@"prodNav"];
+    
+    // [self showViewController:prodListDetails sender:self];
+    
+    [self.searchBar resignFirstResponder];
+    
+    
+    dispatch_async(dispatch_queue_create("Search", nil), ^{
+        
+        NSMutableArray * arrayWithSearchResults = [[NSMutableArray alloc] init];
+        
+        for (MMDItem* item in [[MMDDataBase database] arrayWithItems]) {
+            if (![[NSUserDefaults standardUserDefaults] boolForKey:kFemaleOrMaleSwitch]) {
+                if ((([[item.itemTitle lowercaseString] rangeOfString:[self.searchBar.text lowercaseString]].location != NSNotFound) || ([[item.itemCategory lowercaseString] rangeOfString:[self.searchBar.text lowercaseString]].location != NSNotFound)) && item.itemGender == female) {
+                    [arrayWithSearchResults addObject:item];
+                }
+            } else {
+                if (([[item.itemTitle lowercaseString] rangeOfString:[self.searchBar.text lowercaseString]].location != NSNotFound) || ([[item.itemCategory lowercaseString] rangeOfString:[self.searchBar.text lowercaseString]].location != NSNotFound)) {
+                    [arrayWithSearchResults addObject:item];
+                }
+            }
+            
+            
+        }
+        
+        if (arrayWithSearchResults.count > 0) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                UIStoryboard * storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+                ProductListViewController * searchPage = [storyboard instantiateViewControllerWithIdentifier:@"prodListSearchDetails"];
+                [searchPage initWithArrayWithSearchResults:arrayWithSearchResults andTextForSearch:self.searchBar.text];
+                [self.navigationController pushViewController:searchPage animated:YES];
+            });
+        }
+    });
+    
     
 }
 
@@ -165,11 +305,11 @@
     
     for (MMDItem* item in [[MMDDataBase database] arrayWithItems]) {
         if (![[NSUserDefaults standardUserDefaults] boolForKey:kFemaleOrMaleSwitch]) {
-            if ([[item.itemTitle lowercaseString] rangeOfString:[self.searchBar.text lowercaseString]].location != NSNotFound && item.itemGender == female) {
+            if ((([[item.itemTitle lowercaseString] rangeOfString:[self.searchBar.text lowercaseString]].location != NSNotFound) || ([[item.itemCategory lowercaseString] rangeOfString:[self.searchBar.text lowercaseString]].location != NSNotFound)) && item.itemGender == female) {
                 [self.arrayWithSearchResults addObject:item];
             }
         } else {
-            if ([[item.itemTitle lowercaseString] rangeOfString:[self.searchBar.text lowercaseString]].location != NSNotFound) {
+            if (([[item.itemTitle lowercaseString] rangeOfString:[self.searchBar.text lowercaseString]].location != NSNotFound) || ([[item.itemCategory lowercaseString] rangeOfString:[self.searchBar.text lowercaseString]].location != NSNotFound))  {
                 [self.arrayWithSearchResults addObject:item];
             }
         }
@@ -208,14 +348,15 @@
 
 
 
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+/*
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

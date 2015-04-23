@@ -12,6 +12,7 @@
 #import "MMDWishList.h"
 #import "AppDelegate.h"
 #import "PurchaseItemViewController.h"
+#import "MapViewForItemViewController.h"
 
 @interface ProductDetailViewController ()
 @property (strong, nonatomic) MMDItem * currentItemToShow;
@@ -53,7 +54,7 @@
     [self initialiseMenuItems];
     
     [self getRecommendedItems];
-
+    
 }
 
 - (void)getRecommendedItems {
@@ -61,7 +62,7 @@
         NSMutableArray * tempArray = [[NSMutableArray alloc] init];
         
         for (MMDItem * item in [[MMDDataBase database] arrayWithItems]) {
-           if (item.itemGender == female && [item.itemCategory isEqualToString:self.currentItemToShow.itemCategory]) {
+            if (item.itemGender == female && [item.itemCategory isEqualToString:self.currentItemToShow.itemCategory]) {
                 [tempArray addObject:item];
             }
         }
@@ -91,10 +92,10 @@
         UIBarButtonItem * addToWishList = [[UIBarButtonItem alloc] initWithTitle:@"Add To Wishlist" style:UIBarButtonItemStylePlain target:self action:@selector(addCurrentItemToWishList)];
         [self.navigationItem setRightBarButtonItem:addToWishList];
     }
-
+    
     
     self.productTitle.text = [NSString stringWithFormat:@"%@", self.currentItemToShow.itemTitle ? self.currentItemToShow.itemTitle : @"N/A"];
-   
+    
     
     
     self.productPrice.text = [NSString stringWithFormat:@"£%.2f", self.currentItemToShow.itemPrice];
@@ -114,7 +115,7 @@
     [self.retailPageButton setTitle:self.currentItemToShow.itemStore.storeTitle forState:UIControlStateNormal];
     
     [self initialiseMenuItems];
-
+    
 }
 
 - (void)addGestureRecognizer:(UIImageView *)imageView{
@@ -223,33 +224,33 @@
 }
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-        
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-        
-        //  UINavigationController *det = [storyboard instantiateViewControllerWithIdentifier:@"detNav"];
-        
-        ProductDetailViewController *prodDetail = [storyboard instantiateViewControllerWithIdentifier:@"prodDetailView"];
-        
-        MMDItem* item = [self.arrayWithRecommendedItems objectAtIndex:indexPath.row];
-        
-        [prodDetail initWithItem:item];
-        
-        [self.navigationController pushViewController:prodDetail animated:YES];
-        
-        // [self showViewController:det sender:self];
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    
+    //  UINavigationController *det = [storyboard instantiateViewControllerWithIdentifier:@"detNav"];
+    
+    ProductDetailViewController *prodDetail = [storyboard instantiateViewControllerWithIdentifier:@"prodDetailView"];
+    
+    MMDItem* item = [self.arrayWithRecommendedItems objectAtIndex:indexPath.row];
+    
+    [prodDetail initWithItem:item];
+    
+    [self.navigationController pushViewController:prodDetail animated:YES];
+    
+    // [self showViewController:det sender:self];
     
 }
 
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 - (void)addCurrentItemToWishList {
     [[MMDWishList sharedInstance] addItemToWishList:self.currentItemToShow];
@@ -269,7 +270,7 @@
         
         NSString *imagePath = self.currentItemToShow.itemImagePath;
         UIImage *itemImage = [UIImage imageWithContentsOfFile:imagePath];
-
+        
         
         ALAlertBanner *banner = [ALAlertBanner alertBannerForView:appDelegate.window
                                                             style:ALAlertBannerStyleNotify
@@ -286,8 +287,8 @@
                                                           
                                                           [self.navigationController pushViewController:itemPage animated:YES];
                                                       }];
-
-        [banner setSecondsToShow:5];
+        
+        [banner setSecondsToShow:3];
         [banner show];
         
         
@@ -300,24 +301,32 @@
 - (IBAction)retailPageButtonClicked:(id)sender {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
     
-   // UINavigationController *ret = [storyboard instantiateViewControllerWithIdentifier:@"retNav"];
+    // UINavigationController *ret = [storyboard instantiateViewControllerWithIdentifier:@"retNav"];
     
     RetailDetailViewController * brandPage = [storyboard instantiateViewControllerWithIdentifier:@"retailPage"];
     [brandPage initWithStore:self.currentItemToShow.itemStore];
     [self.navigationController pushViewController:brandPage animated:YES];
-
     
-   // [self showViewController:ret sender:self];
+    
+    // [self showViewController:ret sender:self];
 }
 
 - (IBAction)buyThisItemButtonClicked:(id)sender {
-     [self.currentItemToShow addItemToCart];
+    [self.currentItemToShow addItemToCart];
     
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-        
+    
     PurchaseItemViewController * purchasePage = [storyboard instantiateViewControllerWithIdentifier:@"purchasePage"];
-
+    
     [self.navigationController pushViewController:purchasePage animated:YES];
+    
+}
 
+- (IBAction)toMapClicked:(UIButton *)sender {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    MapViewForItemViewController *mapPage = [storyboard instantiateViewControllerWithIdentifier:@"itemMapView"];
+    [mapPage initWithItem:self.currentItemToShow];
+    [self.navigationController pushViewController:mapPage animated:YES];
+    
 }
 @end

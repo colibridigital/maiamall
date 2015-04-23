@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14D130a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="FUu-XX-1jG">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14E7f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="FUu-XX-1jG">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
         <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -41,16 +41,16 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <items>
                                     <tabBarItem tag="2" title="" image="Home-50 copy.png" id="FdD-Xt-VvL">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                     <tabBarItem image="User Male4-50.png" selectedImage="Default.png" id="dSS-83-NlV">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                     <tabBarItem tag="3" title="" image="News-50-2.png" id="fdj-N0-d8P">
-                                        <inset key="imageInsets" minX="0.0" minY="6" maxX="0.0" maxY="-4"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                     <tabBarItem tag="1" image="Location-50.png" id="OJG-i9-xAH">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                 </items>
                             </tabBar>
@@ -439,16 +439,16 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <items>
                                     <tabBarItem tag="2" title="" image="Home-50 copy.png" id="0nq-cT-buH">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
                                     </tabBarItem>
                                     <tabBarItem image="User Male4-50.png" selectedImage="Default.png" id="WaX-cE-Drd">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                     <tabBarItem tag="3" title="" image="News-50-2.png" id="oGf-bI-gTj">
-                                        <inset key="imageInsets" minX="0.0" minY="6" maxX="0.0" maxY="-4"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
                                     </tabBarItem>
                                     <tabBarItem tag="1" image="Location-50.png" id="kwC-71-q6M">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
                                     </tabBarItem>
                                 </items>
                             </tabBar>
@@ -505,16 +505,16 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <items>
                                     <tabBarItem tag="2" title="" image="Home-50 copy.png" id="Q6u-9P-Ur8">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
                                     </tabBarItem>
                                     <tabBarItem image="User Male4-50.png" id="DTX-ka-29e">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                     <tabBarItem tag="3" title="" image="News-50-2.png" id="Xhh-TO-usq">
-                                        <inset key="imageInsets" minX="0.0" minY="6" maxX="0.0" maxY="-4"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
                                     </tabBarItem>
                                     <tabBarItem tag="1" image="Location-50.png" id="wEy-Oc-i2M">
-                                        <inset key="imageInsets" minX="0.0" minY="4" maxX="0.0" maxY="-6"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                 </items>
                             </tabBar>
@@ -597,16 +597,16 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <items>
                                     <tabBarItem tag="2" title="" image="Home-50 copy.png" id="mhM-j9-Hm4">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
                                     </tabBarItem>
                                     <tabBarItem image="User Male4-50.png" id="jN1-Fb-AfD">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                     <tabBarItem tag="3" title="" image="News-50-2.png" id="xmi-XX-cmM">
-                                        <inset key="imageInsets" minX="0.0" minY="6" maxX="0.0" maxY="-4"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
                                     </tabBarItem>
                                     <tabBarItem tag="1" image="Location-50.png" id="Wg2-OC-0af">
-                                        <inset key="imageInsets" minX="0.0" minY="4" maxX="0.0" maxY="-6"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                 </items>
                             </tabBar>
@@ -689,6 +689,15 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.40000000000000002" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ift-lw-5TM">
+                                <rect key="frame" x="144" y="360" width="32" height="29"/>
+                                <state key="normal" image="Location-50.png">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="toMapClicked:" destination="YLg-Ri-753" eventType="touchUpInside" id="S3Y-ce-lzr"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -744,16 +753,16 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <items>
                                     <tabBarItem tag="2" title="" image="Home-50 copy.png" id="K4O-YK-4pO">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
                                     </tabBarItem>
                                     <tabBarItem image="User Male4-50.png" selectedImage="Default.png" id="U2o-mf-jRy">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                     <tabBarItem tag="3" title="" image="News-50-2.png" id="q9C-Ra-9aK">
-                                        <inset key="imageInsets" minX="0.0" minY="6" maxX="0.0" maxY="-4"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
                                     </tabBarItem>
                                     <tabBarItem tag="1" image="Location-50.png" id="uo3-SM-bJf">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                 </items>
                             </tabBar>
@@ -815,7 +824,7 @@
                                     <outlet property="delegate" destination="Sks-ra-b8P" id="4Xu-GM-T0e"/>
                                 </connections>
                             </collectionView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="   # Favourites" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AGy-2M-Reu">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="   20 Favourites" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AGy-2M-Reu">
                                 <rect key="frame" x="0.0" y="305" width="320" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="3CK-1i-fC3"/>
@@ -824,7 +833,7 @@
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="   # Collections" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZKj-Ma-cTj">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="   5 Collections" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZKj-Ma-cTj">
                                 <rect key="frame" x="0.0" y="165" width="320" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="URn-hl-ENA"/>
@@ -956,16 +965,16 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <items>
                                     <tabBarItem tag="2" title="" image="Home-50 copy.png" id="xNV-6M-70L">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
                                     </tabBarItem>
                                     <tabBarItem image="User Male4-50.png" id="s6y-rp-GNx">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                     <tabBarItem tag="3" title="" image="News-50-2.png" id="w4l-x7-xJR">
-                                        <inset key="imageInsets" minX="0.0" minY="6" maxX="0.0" maxY="-4"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
                                     </tabBarItem>
                                     <tabBarItem tag="1" image="Location-50.png" id="m6w-fz-hgG">
-                                        <inset key="imageInsets" minX="0.0" minY="4" maxX="0.0" maxY="-6"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                 </items>
                             </tabBar>
@@ -1059,16 +1068,16 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <items>
                                     <tabBarItem tag="2" title="" image="Home-50 copy.png" id="hV0-xf-7on">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
                                     </tabBarItem>
                                     <tabBarItem image="User Male4-50.png" selectedImage="Default.png" id="Plo-e7-n4p">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                     <tabBarItem tag="3" title="" image="News-50-2.png" id="oRU-IA-HwG">
-                                        <inset key="imageInsets" minX="0.0" minY="6" maxX="0.0" maxY="-4"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
                                     </tabBarItem>
                                     <tabBarItem tag="1" image="Location-50.png" id="fyv-Sd-Nf5">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                 </items>
                             </tabBar>
@@ -1167,20 +1176,20 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <items>
                                     <tabBarItem tag="2" title="" image="Home-50 copy.png" id="xHt-aG-c2X">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
                                     </tabBarItem>
                                     <tabBarItem image="User Male4-50.png" id="Nmt-jY-0ok">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                     <tabBarItem tag="3" title="" image="News-50-2.png" id="wbb-9r-wWa">
-                                        <inset key="imageInsets" minX="0.0" minY="6" maxX="0.0" maxY="-4"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
                                     </tabBarItem>
                                     <tabBarItem tag="1" image="Location-50.png" id="2An-Av-mhk">
-                                        <inset key="imageInsets" minX="0.0" minY="4" maxX="0.0" maxY="-6"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                 </items>
                             </tabBar>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Summer Collection" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X1A-D7-joi">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Summer Collection" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X1A-D7-joi">
                                 <rect key="frame" x="16" y="72" width="288" height="21"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -1196,7 +1205,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="COLLDET_CELL" id="SuA-ls-vOH" customClass="CollectionDetailCollectionViewCell">
+                                    <collectionViewCell clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" reuseIdentifier="COLLDET_CELL" id="SuA-ls-vOH" customClass="CollectionDetailCollectionViewCell">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -1219,6 +1228,7 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="collectionDetailView" destination="BqR-aJ-ADx" id="PvO-dT-BSW"/>
+                        <outlet property="collectionTitle" destination="X1A-D7-joi" id="Yy3-5S-9tG"/>
                         <outlet property="tabBarController" destination="s74-sH-1o5" id="blg-fK-FJP"/>
                     </connections>
                 </viewController>
@@ -1259,16 +1269,16 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <items>
                                     <tabBarItem tag="2" title="" image="Home-50 copy.png" id="RZS-WD-Qpl">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
                                     </tabBarItem>
                                     <tabBarItem image="User Male4-50.png" id="jpT-jX-CYz">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                     <tabBarItem tag="3" title="" image="News-50-2.png" id="dSH-0i-YYv">
-                                        <inset key="imageInsets" minX="0.0" minY="6" maxX="0.0" maxY="-4"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
                                     </tabBarItem>
                                     <tabBarItem tag="1" image="Location-50.png" id="1uz-Vt-qW4">
-                                        <inset key="imageInsets" minX="0.0" minY="4" maxX="0.0" maxY="-6"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                 </items>
                             </tabBar>
@@ -1375,16 +1385,16 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <items>
                                     <tabBarItem tag="2" title="" image="Home-50 copy.png" id="wyA-cC-h9m">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
                                     </tabBarItem>
                                     <tabBarItem image="User Male4-50.png" id="jYi-gp-fy6">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                     <tabBarItem tag="3" title="" image="News-50-2.png" id="oVy-aU-Iul">
-                                        <inset key="imageInsets" minX="0.0" minY="6" maxX="0.0" maxY="-4"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
                                     </tabBarItem>
                                     <tabBarItem tag="1" image="Location-50.png" id="cV0-eI-tZ2">
-                                        <inset key="imageInsets" minX="0.0" minY="4" maxX="0.0" maxY="-6"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                 </items>
                             </tabBar>
@@ -1527,16 +1537,16 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <items>
                                     <tabBarItem tag="2" title="" image="Home-50 copy.png" id="7QS-DI-p5N">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
                                     </tabBarItem>
                                     <tabBarItem image="User Male4-50.png" id="Io8-vr-dhM">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                     <tabBarItem tag="3" title="" image="News-50-2.png" id="ycI-1a-pMz">
-                                        <inset key="imageInsets" minX="0.0" minY="6" maxX="0.0" maxY="-4"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
                                     </tabBarItem>
                                     <tabBarItem tag="1" image="Location-50.png" id="Zkg-eX-5ZN">
-                                        <inset key="imageInsets" minX="0.0" minY="4" maxX="0.0" maxY="-6"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                 </items>
                             </tabBar>
@@ -1739,16 +1749,16 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <items>
                                     <tabBarItem tag="2" title="" image="Home-50 copy.png" id="BNQ-yf-KEn">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
                                     </tabBarItem>
                                     <tabBarItem image="User Male4-50.png" id="1ym-0L-veE">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                     <tabBarItem tag="3" title="" image="News-50-2.png" id="xbP-sY-Wn4">
-                                        <inset key="imageInsets" minX="0.0" minY="6" maxX="0.0" maxY="-4"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
                                     </tabBarItem>
                                     <tabBarItem tag="1" image="Location-50.png" id="G2U-tk-04A">
-                                        <inset key="imageInsets" minX="0.0" minY="4" maxX="0.0" maxY="-6"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                 </items>
                             </tabBar>
@@ -1822,16 +1832,16 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <items>
                                     <tabBarItem tag="2" title="" image="Home-50 copy.png" id="vU3-Rd-p3F">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
                                     </tabBarItem>
                                     <tabBarItem image="User Male4-50.png" id="osL-Sc-cLK">
-                                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                     <tabBarItem tag="3" title="" image="News-50-2.png" id="t9W-Zm-qQY">
-                                        <inset key="imageInsets" minX="0.0" minY="6" maxX="0.0" maxY="-4"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
                                     </tabBarItem>
                                     <tabBarItem tag="1" image="Location-50.png" id="oFk-UA-Hdf">
-                                        <inset key="imageInsets" minX="0.0" minY="4" maxX="0.0" maxY="-6"/>
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
                                     </tabBarItem>
                                 </items>
                             </tabBar>
@@ -1852,6 +1862,54 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wZm-Zg-4bF" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1364" y="1640"/>
+        </scene>
+        <!--Map View For Item View Controller-->
+        <scene sceneID="NGp-3q-qhl">
+            <objects>
+                <viewController storyboardIdentifier="itemMapView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="qvb-s2-ln1" customClass="MapViewForItemViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="6i5-Pc-ePY"/>
+                        <viewControllerLayoutGuide type="bottom" id="UuM-cu-GA3"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="dtV-pG-J2e">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <tabBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tFb-9a-lxe">
+                                <rect key="frame" x="0.0" y="519" width="320" height="49"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <items>
+                                    <tabBarItem tag="2" title="" image="Home-50 copy.png" id="LlS-Br-BIU">
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
+                                    </tabBarItem>
+                                    <tabBarItem image="User Male4-50.png" id="MuD-y1-7Dn">
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
+                                    </tabBarItem>
+                                    <tabBarItem tag="3" title="" image="News-50-2.png" id="Kfu-hc-wh7">
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-5"/>
+                                    </tabBarItem>
+                                    <tabBarItem tag="1" image="Location-50.png" id="97E-Zj-TTQ">
+                                        <inset key="imageInsets" minX="0.0" minY="10" maxX="0.0" maxY="-6"/>
+                                    </tabBarItem>
+                                </items>
+                            </tabBar>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hKQ-tm-OYS" customClass="GMSMapView">
+                                <rect key="frame" x="0.0" y="66" width="320" height="450"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    </view>
+                    <toolbarItems/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="mapView" destination="hKQ-tm-OYS" id="VKN-4V-RS6"/>
+                        <outlet property="tabBarController" destination="tFb-9a-lxe" id="B9S-Sz-ju7"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Iux-22-FpX" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1338" y="985"/>
         </scene>
     </scenes>
     <resources>
@@ -1886,11 +1944,11 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="95b-qb-Muc"/>
-        <segue reference="8vS-07-Ztn"/>
         <segue reference="fEs-ex-e8Z"/>
+        <segue reference="bUX-Mu-wq1"/>
         <segue reference="dsV-kj-tD1"/>
         <segue reference="z3Z-27-kAD"/>
-        <segue reference="bUX-Mu-wq1"/>
+        <segue reference="8vS-07-Ztn"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
 </document>

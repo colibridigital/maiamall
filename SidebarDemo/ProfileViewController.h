@@ -21,4 +21,11 @@
 
 @property (strong, nonatomic) NSMutableArray * arrayWithSearchResults;
 
+@property (strong, nonatomic) NSMutableArray * summerItems;
+@property (strong, nonatomic) NSMutableArray * shoesItems;
+@property (strong, nonatomic) NSMutableArray * bagsItems;
+@property (strong, nonatomic) NSMutableArray * formalItems;
+@property (strong, nonatomic) NSMutableArray * shirtsItems;
+@property (strong, nonatomic) NSMutableArray * favCollItems;
+
 @end

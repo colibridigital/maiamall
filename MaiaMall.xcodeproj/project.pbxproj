@@ -20,6 +20,7 @@
 		151902F41AD4624700644C50 /* tshirt.png in Resources */ = {isa = PBXBuildFile; fileRef = 151902F31AD4624700644C50 /* tshirt.png */; };
 		151902F61AD4632200644C50 /* suit.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 151902F51AD4632200644C50 /* suit.jpg */; };
 		151902FA1AD46E2300644C50 /* TrendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 151902F91AD46E2300644C50 /* TrendsViewController.m */; };
+		152F1A271AE9334A001C5571 /* MapViewForItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 152F1A261AE93349001C5571 /* MapViewForItemViewController.m */; };
 		1536F2E41AD49DA200E41C57 /* Filter-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 1536F2E01AD49DA200E41C57 /* Filter-50.png */; };
 		1536F2E51AD49DA200E41C57 /* Home-50 copy.png in Resources */ = {isa = PBXBuildFile; fileRef = 1536F2E11AD49DA200E41C57 /* Home-50 copy.png */; };
 		1536F2E61AD49DA200E41C57 /* News-50-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 1536F2E21AD49DA200E41C57 /* News-50-2.png */; };
@@ -170,6 +171,8 @@
 		151902F51AD4632200644C50 /* suit.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = suit.jpg; sourceTree = "<group>"; };
 		151902F81AD46E2300644C50 /* TrendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrendsViewController.h; sourceTree = "<group>"; };
 		151902F91AD46E2300644C50 /* TrendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrendsViewController.m; sourceTree = "<group>"; };
+		152F1A251AE93349001C5571 /* MapViewForItemViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewForItemViewController.h; sourceTree = "<group>"; };
+		152F1A261AE93349001C5571 /* MapViewForItemViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewForItemViewController.m; sourceTree = "<group>"; };
 		1536F2E01AD49DA200E41C57 /* Filter-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Filter-50.png"; sourceTree = "<group>"; };
 		1536F2E11AD49DA200E41C57 /* Home-50 copy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Home-50 copy.png"; sourceTree = "<group>"; };
 		1536F2E21AD49DA200E41C57 /* News-50-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "News-50-2.png"; sourceTree = "<group>"; };
@@ -398,6 +401,15 @@
 				151902F91AD46E2300644C50 /* TrendsViewController.m */,
 			);
 			name = TrendsViewController;
+			sourceTree = "<group>";
+		};
+		152F1A241AE93321001C5571 /* MapViewForItemViewController */ = {
+			isa = PBXGroup;
+			children = (
+				152F1A251AE93349001C5571 /* MapViewForItemViewController.h */,
+				152F1A261AE93349001C5571 /* MapViewForItemViewController.m */,
+			);
+			name = MapViewForItemViewController;
 			sourceTree = "<group>";
 		};
 		157562751ABAEFFC001FAE38 /* ProductDetailViewController */ = {
@@ -791,6 +803,7 @@
 		F4EECF17177C99F400778578 /* SidebarDemo */ = {
 			isa = PBXGroup;
 			children = (
+				152F1A241AE93321001C5571 /* MapViewForItemViewController */,
 				151902F71AD46DAE00644C50 /* TrendsViewController */,
 				15B21DFB1AD2DF6800611559 /* ItemsInTheStoreTableViewCell */,
 				15B21DF71AD2DB5400611559 /* ListOfItemsInTheStoreViewController */,
@@ -1091,6 +1104,7 @@
 				F4EECF1E177C99F400778578 /* main.m in Sources */,
 				15E753491AC573AA00F2D39D /* RetailDetailViewController.m in Sources */,
 				F4EECF22177C99F400778578 /* AppDelegate.m in Sources */,
+				152F1A271AE9334A001C5571 /* MapViewForItemViewController.m in Sources */,
 				15E968601ACFE8C1003D20B8 /* WishlistViewController.m in Sources */,
 				15ED18371ACED7EB0091E84A /* MMDBrand.m in Sources */,
 				15E9685C1ACFDB5C003D20B8 /* SettingsViewController.m in Sources */,

@@ -322,13 +322,11 @@ AppDelegate* appDel;
     return imagePath;
 }
 
-- (NSMutableArray *)getItems {
-    NSMutableArray * retval = [[NSMutableArray alloc] init];
-    
-   // if (![dataBase open])
-   //     [dataBase open];
-    
-    FMResultSet *rs = [dataBase executeQuery:@"SELECT * FROM Product"];
+
+
+- (NSMutableArray *)getItemsFromDatabaseWithQuery:(NSString *)query {
+    NSMutableArray *retval = [[NSMutableArray alloc] init];
+    FMResultSet *rs = [dataBase executeQuery:query];
     [self sanitiseResultSet:rs];
     
     while ([rs next]) {
@@ -373,16 +371,90 @@ AppDelegate* appDel;
             NSString *imagePath = [self manipulateImage:itemId];
             
             if (imagePath != nil && ![imagePath isEqualToString:@"(null)"]) {
-            
+                
                 MMDItem * item = [[MMDItem alloc] initWithImagePath:[NSString stringWithFormat:@"%i", itemId] title:itemTitle description:itemDescription imagePath:imagePath SKU:itemSKU collection:@"" category:itemCategory price:itemPrice store:itemStore brand:itemBrand gender:itemGender color:itemColors size:itemSizes];
-            
+                
                 [retval addObject:item];
             }
         }
     }
     
     [rs close];
+    return retval;
+}
+
+- (NSMutableArray *)getItems {
+   // if (![dataBase open])
+   //     [dataBase open];
+    
+    NSString *query = @"SELECT * FROM Product";
+    
+    NSMutableArray *retval;
+    retval = [self getItemsFromDatabaseWithQuery:query];
    // [self closeDataBase];
+    
+    return retval;
+}
+
+- (NSMutableArray *)getSummerCollectionItems {
+    [dataBase open];
+    NSString *query = @"SELECT * FROM Product where id in (414, 420, 437, 450, 551)";
+    
+    NSMutableArray *retval;
+    retval = [self getItemsFromDatabaseWithQuery:query];
+     [self closeDataBase];
+    
+    return retval;
+}
+- (NSMutableArray *)getShoesCollection {
+    [dataBase open];
+    NSString *query = @"SELECT * FROM Product where id in (542, 548, 555, 561, 614, 615, 619)";
+    
+    NSMutableArray *retval;
+    retval = [self getItemsFromDatabaseWithQuery:query];
+     [self closeDataBase];
+    
+    return retval;
+}
+- (NSMutableArray *)getBagsCollection {
+    [dataBase open];
+    NSString *query = @"SELECT * FROM Product where id in (540, 538, 527, 524, 427, 424)";
+    
+    NSMutableArray *retval;
+    retval = [self getItemsFromDatabaseWithQuery:query];
+     [self closeDataBase];
+    
+    return retval;
+}
+- (NSMutableArray *)getShirtsCollection {
+    [dataBase open];
+    NSString *query = @"SELECT * FROM Product where id in (566, 567, 569)";
+    
+    NSMutableArray *retval;
+    retval = [self getItemsFromDatabaseWithQuery:query];
+     [self closeDataBase];
+    
+    return retval;
+}
+- (NSMutableArray *)getFormalCollection {
+    [dataBase open];
+    
+    NSString *query = @"SELECT * FROM Product where id in (570, 595, 537, 547, 585)";
+    
+    NSMutableArray *retval;
+    retval = [self getItemsFromDatabaseWithQuery:query];
+     [self closeDataBase];
+    
+    return retval;
+}
+- (NSMutableArray *)getFavouriteCollection {
+    
+    [dataBase open];
+    NSString *query = @"SELECT * FROM Product where id in (614, 570, 566, 540, 548, 567, 585, 619, 612, 550, 552, 568, 569, 581, 582, 591, 592, 593, 439, 437)";
+    
+    NSMutableArray *retval;
+    retval = [self getItemsFromDatabaseWithQuery:query];
+     [self closeDataBase];
     
     return retval;
 }

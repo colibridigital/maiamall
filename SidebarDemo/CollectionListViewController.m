@@ -9,6 +9,7 @@
 #import "CollectionListViewController.h"
 #import "CollectionDetailCollectionViewCell.h"
 #import "ProductDetailViewController.h"
+#import "MMDItem.h"
 
 @interface CollectionListViewController ()
 
@@ -16,18 +17,28 @@
 
 @implementation CollectionListViewController
 
+-(void)initWithItemsArray:(NSMutableArray*)items {
+    self.currentItems = items;
+}
+
+-(void)initWithTitleText:(NSString *)text {
+    self.collectionTitle.text = @"";
+    [self.collectionTitle setText:text];
+}
+
 - (void)initialiseMenuItems {
     
     self.tabBarController.delegate = self;
     
-    [self.collectionDetailView registerNibAndCell];
-    [self.collectionDetailView reloadData];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     [self initialiseMenuItems];
+    
+    [self.collectionDetailView registerNibAndCell];
+    [self.collectionDetailView reloadData];
     
     // Do any additional setup after loading the view.
     
@@ -39,7 +50,16 @@
     
     [self initialiseMenuItems];
     
-      
+    [self.collectionDetailView reloadData];
+    
+    NSLog(@"current items: %lu", self.currentItems.count);
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:YES];
+    
+    self.collectionTitle.text = self.colText;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -85,12 +105,24 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return 10;
+    NSLog(@"in here: %lu", self.currentItems.count);
+    
+    return self.currentItems.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     CollectionDetailCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"COLLDET_CELL" forIndexPath:indexPath];
+    
+    NSString *imagePath = ((MMDItem*)[self.currentItems objectAtIndex:indexPath.row]).itemImagePath;
+    
+    UIImage *itemImage = [UIImage imageWithContentsOfFile:imagePath];
+    
+    // NSLog(@"current items: %lu", sizeof(self.currentItems));
+    
+    NSLog(@"in the collection cell");
+    
+    cell.detailImage.image = itemImage;
     
     // UIImage *img = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"product2" ofType: @"png"]];
     
@@ -102,15 +134,17 @@
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
     
-        
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-        
-        ProductDetailViewController *prodDetail = [storyboard instantiateViewControllerWithIdentifier:@"prodDetailView"];
-        
-        // UINavigationController *det = [storyboard instantiateViewControllerWithIdentifier:@"detNav"];
-        
-        [self showViewController:prodDetail sender:self];
-   
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+    
+    ProductDetailViewController *prodDetail = [storyboard instantiateViewControllerWithIdentifier:@"prodDetailView"];
+    
+    [prodDetail initWithItem:[self.currentItems objectAtIndex:indexPath.row]];
+    
+    // UINavigationController *det = [storyboard instantiateViewControllerWithIdentifier:@"detNav"];
+    
+    [self showViewController:prodDetail sender:self];
+    
     
 }
 
@@ -118,13 +152,13 @@
 
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

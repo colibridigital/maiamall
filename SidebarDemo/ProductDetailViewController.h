@@ -17,6 +17,7 @@
 @property (strong, nonatomic) IBOutlet ItemsSimilarCollectionView *similarItemsList;
 - (IBAction)retailPageButtonClicked:(id)sender;
 - (IBAction)buyThisItemButtonClicked:(id)sender;
+- (IBAction)toMapClicked:(id)sender;
 
 - (void)initWithItem:(MMDItem*)item;
 - (void)addCurrentItemToWishList;
