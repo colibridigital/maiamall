@@ -37,7 +37,7 @@
     [self calculatePrice];
     
     [self initialiseMenuItems];
-        
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -123,6 +123,18 @@
     self.navigationItem.titleView = searchBarView;
     
     self.tabBarController.delegate = self;
+    
+    UITabBarItem *item = [self.tabBarController.items objectAtIndex:1];
+    item.image = [[UIImage imageNamed:@"User Female-50.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+    item = [self.tabBarController.items objectAtIndex:0];
+    item.image = [[UIImage imageNamed:@"Home-50.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+    item = [self.tabBarController.items objectAtIndex:2];
+    item.image = [[UIImage imageNamed:@"News-50-2.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+    item = [self.tabBarController.items objectAtIndex:3];
+    item.image = [[UIImage imageNamed:@"Location-50.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
 }
 
 
@@ -144,6 +156,9 @@
     if (((MMDItem*)[[[MMDCart cart] arrayWithItemsToPurchase] objectAtIndex:indexPath.row]).itemNumberInCart > 0) {
         [[[[MMDCart cart] arrayWithItemsToPurchase] objectAtIndex:indexPath.row] decrementItemFromCart];
         [((PurchaseItemTableViewCell*)[self.cartTV cellForRowAtIndexPath:indexPath]) setTextFieldTextFornumber:((MMDItem*)[[[MMDCart cart] arrayWithItemsToPurchase] objectAtIndex:indexPath.row]).itemNumberInCart];
+        [self.cartTV reloadData];
+    } else if (((MMDItem*)[[[MMDCart cart] arrayWithItemsToPurchase] objectAtIndex:indexPath.row]).itemNumberInCart == 0) {
+        [[[[MMDCart cart] arrayWithItemsToPurchase] objectAtIndex:indexPath.row] removeItemFromCart];
         [self.cartTV reloadData];
     }
     
@@ -200,7 +215,7 @@
 
 - (IBAction)purchaseButtonClicked:(UIButton *)sender {
     
-   [self purchaseItems];
+    [self purchaseItems];
 }
 
 #pragma mark - Table View DataSourca and Delegate
@@ -210,28 +225,28 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-  
-            if ([[MMDCart cart] arrayWithItemsToPurchase].count > 0) {
-                [self.messageLabel setText:@""];
-                self.cartTV.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-                return [[MMDCart cart] arrayWithItemsToPurchase].count;
-            } else {
-                
-                // Display a message when the table is empty
-                self.messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
-                
-                self.messageLabel.text = @"Your cart is empty.";
-                self.messageLabel.textColor = [UIColor lightGrayColor];
-                self.messageLabel.numberOfLines = 0;
-                self.messageLabel.textAlignment = NSTextAlignmentCenter;
-                self.messageLabel.font = [UIFont fontWithName:@"Palatino-Italic" size:20];
-                [self.messageLabel sizeToFit];
-                
-                self.cartTV.backgroundView = self.messageLabel;
-                self.cartTV.separatorStyle = UITableViewCellSeparatorStyleNone;
-                
-                return 0;
-            }
+    
+    if ([[MMDCart cart] arrayWithItemsToPurchase].count > 0) {
+        [self.messageLabel setText:@""];
+        self.cartTV.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        return [[MMDCart cart] arrayWithItemsToPurchase].count;
+    } else {
+        
+        // Display a message when the table is empty
+        self.messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+        
+        self.messageLabel.text = @"Your cart is empty.";
+        self.messageLabel.textColor = [UIColor lightGrayColor];
+        self.messageLabel.numberOfLines = 0;
+        self.messageLabel.textAlignment = NSTextAlignmentCenter;
+        self.messageLabel.font = [UIFont fontWithName:@"Palatino-Italic" size:20];
+        [self.messageLabel sizeToFit];
+        
+        self.cartTV.backgroundView = self.messageLabel;
+        self.cartTV.separatorStyle = UITableViewCellSeparatorStyleNone;
+        
+        return 0;
+    }
     
 }
 
@@ -243,19 +258,19 @@
     
     [cell initCellWithItem:item];
     
-   /* float totalPrice = 0.0;
-    
-    for (MMDItem * item in [[MMDCart cart] arrayWithItemsToPurchase]) {
-        if (item.itemNumberInCart > 0) {
-            totalPrice += item.itemNumberInCart * item.itemPrice;
-        }
-    }*/
+    /* float totalPrice = 0.0;
+     
+     for (MMDItem * item in [[MMDCart cart] arrayWithItemsToPurchase]) {
+     if (item.itemNumberInCart > 0) {
+     totalPrice += item.itemNumberInCart * item.itemPrice;
+     }
+     }*/
     
     [cell initTotalPrice:item.itemPrice];
     
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     return cell;
-  
+    
 }
 
 
@@ -292,11 +307,11 @@
         
         for (MMDItem* item in [[MMDDataBase database] arrayWithItems]) {
             if (![[NSUserDefaults standardUserDefaults] boolForKey:kFemaleOrMaleSwitch]) {
-                if ([[item.itemTitle lowercaseString] rangeOfString:[searchBar.text lowercaseString]].location != NSNotFound && item.itemGender == female) {
+                if ((([[item.itemTitle lowercaseString] rangeOfString:[self.searchBar.text lowercaseString]].location != NSNotFound) || ([[item.itemCategory lowercaseString] rangeOfString:[self.searchBar.text lowercaseString]].location != NSNotFound)) && item.itemGender == female) {
                     [self.arrayWithSearchResults addObject:item];
                 }
             } else {
-                if ([[item.itemTitle lowercaseString] rangeOfString:[searchBar.text lowercaseString]].location != NSNotFound) {
+                if (([[item.itemTitle lowercaseString] rangeOfString:[self.searchBar.text lowercaseString]].location != NSNotFound) || ([[item.itemCategory lowercaseString] rangeOfString:[self.searchBar.text lowercaseString]].location != NSNotFound)) {
                     [self.arrayWithSearchResults addObject:item];
                 }
             }
@@ -336,11 +351,11 @@
     
     for (MMDItem* item in [[MMDDataBase database] arrayWithItems]) {
         if (![[NSUserDefaults standardUserDefaults] boolForKey:kFemaleOrMaleSwitch]) {
-            if ([[item.itemTitle lowercaseString] rangeOfString:[self.searchBar.text lowercaseString]].location != NSNotFound && item.itemGender == female) {
+            if ((([[item.itemTitle lowercaseString] rangeOfString:[self.searchBar.text lowercaseString]].location != NSNotFound) || ([[item.itemCategory lowercaseString] rangeOfString:[self.searchBar.text lowercaseString]].location != NSNotFound)) && item.itemGender == female) {
                 [self.arrayWithSearchResults addObject:item];
             }
         } else {
-            if ([[item.itemTitle lowercaseString] rangeOfString:[self.searchBar.text lowercaseString]].location != NSNotFound) {
+            if (([[item.itemTitle lowercaseString] rangeOfString:[self.searchBar.text lowercaseString]].location != NSNotFound) || ([[item.itemCategory lowercaseString] rangeOfString:[self.searchBar.text lowercaseString]].location != NSNotFound)) {
                 [self.arrayWithSearchResults addObject:item];
             }
         }
